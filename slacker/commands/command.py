@@ -28,3 +28,13 @@ class Command(ABC):
   def action(self):
     """Executes the action of the command."""
     pass
+
+  @staticmethod
+  def find_all():
+    """Finds all command classes deriving from Command."""
+    cmds = set()
+    for child in Command.__subclasses__():
+      if child not in cmds:
+        cmds.add(child)
+    return cmds
+
