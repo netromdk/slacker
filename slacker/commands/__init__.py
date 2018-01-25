@@ -1,2 +1,2 @@
-# TODO: Add imports of each new command here to make it available. Like so:
-#from . import ACommand
+from . import command
+from . import registrar
