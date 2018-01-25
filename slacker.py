@@ -32,6 +32,10 @@ def main():
   for cmd in Command.find_all():
     reg.register(cmd())
 
+  if reg.count() == 0:
+    print("No commands found!")
+    sys.exit(-1)
+
   while True:
     line = readline()
     if line is None: break
