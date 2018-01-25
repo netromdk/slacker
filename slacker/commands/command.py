@@ -15,10 +15,9 @@ class Command(ABC):
     """Returns the description of the command."""
     pass
 
-  @abstractmethod
   def help(self):
     """Returns the help text of the command."""
-    pass
+    return self.description()
 
   def aliases(self):
     """Returns a list of aliases defined for this command."""
