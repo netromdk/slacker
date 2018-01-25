@@ -4,6 +4,7 @@ import sys
 import signal
 
 from slacker.commands.command import Command
+from slacker.commands.registrar import Registrar
 from slacker.environment.common import COMMAND_PREFIX
 
 def signal_handler(signal, frame):
@@ -12,10 +13,9 @@ def signal_handler(signal, frame):
 
 def main():
   # Find all slacker commands.
+  reg = Registrar()
   for cmd in Command.find_all():
-    # TODO: Register commands with registrar here instead when implemented!
-    c = cmd()
-    print(">> Found command {}".format(c.name()))
+    reg.register(cmd())
 
   while True:
     input(COMMAND_PREFIX)
