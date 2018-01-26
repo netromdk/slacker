@@ -47,6 +47,10 @@ def main():
     print("No commands found!")
     sys.exit(-1)
 
+  if len(sys.argv) > 1:
+    process(" ".join(sys.argv[1:]), reg)
+    return
+
   while True:
     line = readline()
     if line is None: break
