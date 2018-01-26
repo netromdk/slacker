@@ -18,13 +18,24 @@ def readline():
   # Handle EOF/^D nicely.
   except: return None
 
+def parse_line(line):
+  if " " in line:
+    return line.split(maxsplit = 1)
+  return (line, None)
+
 def process(line, reg):
-  cmd = reg.find(line)
-  if not cmd:
-    print("Unknown command: {}".format(line))
+  (cmd, args) = parse_line(line)
+
+  instance = reg.find(cmd)
+  if not instance:
+    print("Unknown command: {}".format(cmd))
     return
 
-  cmd.action()
+  if args:
+    try:
+      args = instance.parse_args(args.split())
+    except: return
+  instance.action(args)
 
 def main():
   # Find all slacker commands.
