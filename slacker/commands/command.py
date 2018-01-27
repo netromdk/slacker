@@ -32,17 +32,19 @@ class Command(ABC):
 
   def __validate(self):
     """Validates that the command is valid and conforming with the requirements."""
+    derive_cls = type(self).__mro__[0]
+
     if not COMMAND_NAME_REGEX.fullmatch(self.name()):
-      raise ValueError("Command name is invalid: '{}'".format(self.name()))
+      raise ValueError("Command name is invalid '{}' in {}".format(self.name(), derive_cls))
 
     a = self.aliases()
     if a is not None and type(a) != type(()) and type(a) != type([]):
-      raise ValueError("Command aliases must be either a set, a list or None: '{}', {}"
-                       .format(a, type(a)))
+      raise ValueError("Command aliases must be either a set, a list or None: '{}', {} in {}"
+                       .format(a, type(a), derive_cls))
     elif a:
       for alias in a:
         if not COMMAND_NAME_REGEX.fullmatch(alias):
-          raise ValueError("Command alias is invalid: '{}'".format(alias))
+          raise ValueError("Command alias is invalid '{}' in {}".format(alias, derive_cls))
 
   def make_parser(self):
     """Override to define argparse.ArgumentParser."""
