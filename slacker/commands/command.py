@@ -1,9 +1,16 @@
 from abc import ABC, abstractmethod
+import re
+
+# The "." can only be in the middle of the command name.
+COMMAND_NAME_REGEX = re.compile("([\w\d][\w\d\.]*)?[\w\d]+")
 
 class Command(ABC):
   """Command encapsulates a Slacker command with a name, description, help text, alises, and the
   action to perform.
   """
+
+  def __init__(self):
+    self.__validate()
 
   @abstractmethod
   def name(self):
@@ -22,6 +29,20 @@ class Command(ABC):
   def aliases(self):
     """Returns a list of aliases defined for this command."""
     return None
+
+  def __validate(self):
+    """Validates that the command is valid and conforming with the requirements."""
+    if not COMMAND_NAME_REGEX.fullmatch(self.name()):
+      raise ValueError("Command name is invalid: '{}'".format(self.name()))
+
+    a = self.aliases()
+    if a is not None and type(a) != type(()) and type(a) != type([]):
+      raise ValueError("Command aliases must be either a set, a list or None: '{}', {}"
+                       .format(a, type(a)))
+    elif a:
+      for alias in a:
+        if not COMMAND_NAME_REGEX.fullmatch(alias):
+          raise ValueError("Command alias is invalid: '{}'".format(alias))
 
   def make_parser(self):
     """Override to define argparse.ArgumentParser."""
@@ -47,4 +68,3 @@ class Command(ABC):
       if child not in cmds:
         cmds.add(child)
     return cmds
-
