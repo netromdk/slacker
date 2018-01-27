@@ -57,10 +57,6 @@ def parse_args():
   parser.add_argument("-V", "--version", action = "version",
                       version = "%(prog)s {}".format(VERSION))
 
-  if not args and not cmd_args:
-     parser.print_help()
-     sys.exit(0)
-
   args = parser.parse_args(args)
   return (args, cmd_args)
 
@@ -69,7 +65,7 @@ def main():
   slacker_logger.debug('Starting Slacker...')
 
   (args, cmd_args) = parse_args()
-  # Find all slacker commands.
+
   reg = Registrar()
   for cmd in Command.find_all():
     reg.register(cmd())
