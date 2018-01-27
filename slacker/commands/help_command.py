@@ -18,5 +18,6 @@ class HelpCommand(Command):
 
   def action(self, args = None):
     print("Displaying available commands:")
+    self.logger.debug('triggered action')
     for cmd in Command.find_all():
       self.__show(cmd())

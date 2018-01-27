@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from slacker.logger import Logger
 import re
 
 # The "." can only be in the middle of the command name.
@@ -11,6 +12,7 @@ class Command(ABC):
 
   def __init__(self):
     self.__validate()
+    self.logger = Logger(self.__class__.__name__).get()
 
   @abstractmethod
   def name(self):
