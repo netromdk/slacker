@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
 from slacker.environment.common import COMMAND_PREFIX, VERSION
+from slacker.logger import Logger
 
 def signal_handler(signal, frame):
   print("\nCaught sig.. {}".format(signal))
@@ -64,8 +65,11 @@ def parse_args():
   return (args, cmd_args)
 
 def main():
-  (args, cmd_args) = parse_args()
+  slacker_logger = Logger(__name__).get()
+  slacker_logger.debug('Starting Slacker...')
 
+  (args, cmd_args) = parse_args()
+  # Find all slacker commands.
   reg = Registrar()
   for cmd in Command.find_all():
     reg.register(cmd())
