@@ -2,10 +2,11 @@
 
 import sys
 import signal
+from argparse import ArgumentParser
 
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
-from slacker.environment.common import COMMAND_PREFIX
+from slacker.environment.common import COMMAND_PREFIX, VERSION
 
 def signal_handler(signal, frame):
   print("\nCaught sig.. {}".format(signal))
@@ -37,8 +38,34 @@ def process(line, reg):
     except: return
   instance.action(args)
 
+def parse_args():
+  # Divide arguments into slacker and single command args.
+  args = sys.argv[1:]
+  cmd_args = None
+  try:
+    div_index = args.index("--")
+    cmd_args = args[div_index+1:]
+    args = args[0:div_index]
+  except: pass
+
+  parser = ArgumentParser(description = "Useful Slack utilities and REPL.",
+                          usage = "%(prog)s [options] [-- command [args..]]",
+                          epilog = "By passing '--', it signals that Slacker arguments end and a "
+                                   "single command and arguments begin. Slacker will exit after "
+                                   "running that command.")
+  parser.add_argument("-V", "--version", action = "version",
+                      version = "%(prog)s {}".format(VERSION))
+
+  if not args and not cmd_args:
+     parser.print_help()
+     sys.exit(0)
+
+  args = parser.parse_args(args)
+  return (args, cmd_args)
+
 def main():
-  # Find all slacker commands.
+  (args, cmd_args) = parse_args()
+
   reg = Registrar()
   for cmd in Command.find_all():
     reg.register(cmd())
@@ -47,8 +74,8 @@ def main():
     print("No commands found!")
     sys.exit(-1)
 
-  if len(sys.argv) > 1:
-    process(" ".join(sys.argv[1:]), reg)
+  if cmd_args:
+    process(" ".join(cmd_args), reg)
     return
 
   while True:
