@@ -14,7 +14,7 @@ class HelpCommand(Command):
     aliases = ""
     if cmd.aliases():
       aliases = " [{}]".format(", ".join(cmd.aliases()))
-      print("  {}{}:\t\t{}".format(cmd.name(), aliases, cmd.description()))
+      print("  {:<12}{:<12}{}".format(cmd.name(), aliases, cmd.description()))
 
   def action(self, args = None):
     print("Displaying available commands:")
