@@ -22,13 +22,7 @@ class WorkspaceCommand(Command):
     config = Config.get()
     workspaces = config.workspaces()
 
-    if not args:
-      print("Predefined workspaces:")
-      for workspace in workspaces:
-        active = " (active)" if (config.active_workspace() == workspace) else ""
-        print("  {}{}".format(workspace, active))
-
-    elif args.set:
+    if args.set:
       workspace = args.set
       if workspace == config.active_workspace():
         print("Workspace already active!")
@@ -39,3 +33,9 @@ class WorkspaceCommand(Command):
 
       config.set_active_workspace(workspace)
       config.save()
+
+    else:
+      print("Predefined workspaces:")
+      for workspace in workspaces:
+        active = " (active)" if (config.active_workspace() == workspace) else ""
+        print("  {}{}".format(workspace, active))

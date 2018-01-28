@@ -21,14 +21,14 @@ class LogCommand(Command):
     return parser
 
   def action(self, args = None):
-    if not args:
-      level = logging.getLevelName(self.logger.getEffectiveLevel())
-      print("Log level: {}".format(level))
-
-    elif args.level:
+    if args.level:
       level = Logger.level_from_name(args.level)
       self.logger.debug('Set log level to: {}'.format(args.level))
 
       config = Config.get()
       config.set_log_level(level)
       config.save()
+
+    else:
+      level = logging.getLevelName(self.logger.getEffectiveLevel())
+      print("Log level: {}".format(level))

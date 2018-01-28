@@ -38,10 +38,11 @@ def process(line, reg):
     print("Unknown command: {}".format(cmd))
     return
 
-  if args:
-    try:
-      args = instance.parse_args(args.split())
-    except: return
+  # Try parsing even with no arguments so default values are returned in the arguments namespace, if
+  # any.
+  try:
+    args = instance.parse_args([] if not args else args.split())
+  except: return
   instance.action(args)
 
 def parse_args():
