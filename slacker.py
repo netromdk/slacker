@@ -92,11 +92,11 @@ def init():
         .format(workspace))
 
 def main():
-  slacker_logger = Logger(__name__).get()
-  slacker_logger.debug('Starting Slacker...')
-
   # Load config explicitly.
   config = Config.get()
+
+  slacker_logger = Logger(__name__).get()
+  slacker_logger.debug('Starting Slacker...')
 
   (args, cmd_args) = parse_args()
 
