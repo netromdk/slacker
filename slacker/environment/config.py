@@ -41,4 +41,3 @@ class Config:
       data = json.load(fp)
       if 'repl_prefix' in data:
         self.set_repl_prefix(data['repl_prefix'])
-
