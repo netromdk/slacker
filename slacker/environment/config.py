@@ -59,6 +59,16 @@ class Config:
   def workspaces(self):
     return self.__workspaces.keys()
 
+  def workspace_token(self, name):
+    if not name in self.__workspaces:
+      raise ValueError("Cannot get token for unknown workspace: '{}'".format(name))
+    return self.__workspaces[name]
+
+  def active_workspace_token(self):
+    if not self.active_workspace():
+      raise ValueError("No workspace is active!")
+    return self.workspace_token(self.active_workspace())
+
   def __file_path(self):
     return os.path.expanduser('~/.slacker')
 

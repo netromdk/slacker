@@ -102,7 +102,6 @@ def main():
 
   if args.init:
     init()
-    return
 
   if not config.active_workspace():
     print("No workspace active!")
