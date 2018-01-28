@@ -56,6 +56,9 @@ class Config:
       raise ValueError("Cannot remove active workspace: '{}'".format(name))
     del(self.__workspaces[name])
 
+  def workspaces(self):
+    return self.__workspaces.keys()
+
   def __file_path(self):
     return os.path.expanduser('~/.slacker')
 

@@ -1,0 +1,41 @@
+from .command import Command
+from argparse import ArgumentParser
+from slacker.environment.config import Config
+
+class WorkspaceCommand(Command):
+  def name(self):
+    return "workspace"
+
+  def description(self):
+    return "Displays predefined workspaces and which one is active."
+
+  def aliases(self):
+    return ["ws"]
+
+  def make_parser(self):
+    parser = ArgumentParser(prog = self.name(), description = "Displays predefined workspaces.")
+    parser.add_argument("-s", "--set", metavar = "WORKSPACE",
+                        help = "Set another workspace active.")
+    return parser
+
+  def action(self, args = None):
+    config = Config.get()
+    workspaces = config.workspaces()
+
+    if not args:
+      print("Predefined workspaces:")
+      for workspace in workspaces:
+        active = " (active)" if (config.active_workspace() == workspace) else ""
+        print("  {}{}".format(workspace, active))
+
+    elif args.set:
+      workspace = args.set
+      if workspace == config.active_workspace():
+        print("Workspace already active!")
+        return
+      elif not workspace in workspaces:
+        print("Unknown workspace: '{}'".format(workspace))
+        return
+
+      config.set_active_workspace(workspace)
+      config.save()

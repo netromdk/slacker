@@ -3,4 +3,4 @@ from . import registrar
 
 # All commands go here:
 from . import help_command
-
+from . import workspace_command
