@@ -17,7 +17,7 @@ def signal_handler(signal, frame):
 
 def readline():
   try:
-    return input(Config.get().repl_prefix()).strip().lower()
+    return input(Config.get().repl_prefix()).strip()
 
   # Handle EOF/^D nicely.
   except: return None
@@ -30,7 +30,7 @@ def parse_line(line):
 def process(line, reg):
   (cmd, args) = parse_line(line)
 
-  instance = reg.find(cmd)
+  instance = reg.find(cmd.lower())
   if not instance:
     print("Unknown command: {}".format(cmd))
     return
