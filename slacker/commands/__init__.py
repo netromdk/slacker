@@ -5,3 +5,4 @@ from . import registrar
 from . import help_command
 from . import workspace_command
 from . import exit_command
+from . import log_command

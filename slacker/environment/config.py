@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 from slacker.logger import Logger
 
@@ -69,13 +70,23 @@ class Config:
       raise ValueError("No workspace is active!")
     return self.workspace_token(self.active_workspace())
 
+  def set_log_level(self, level):
+    if not level in Logger.levels():
+      raise ValueError("Invalid log level: {}".format(level))
+    self.__log_level = level
+    Logger.set_level(level)
+
+  def log_level(self):
+    return self.__log_level
+
   def __file_path(self):
     return os.path.expanduser('~/.slacker')
 
   def save(self):
     data = {'repl_prefix': self.repl_prefix(),
             'workspaces': self.__workspaces,
-            'active_workspace': self.active_workspace()}
+            'active_workspace': self.active_workspace(),
+            'log_level': self.log_level()}
     with open(self.__file_path(), 'w') as fp:
       json.dump(data, fp, indent = 2)
       self.__logger.info('Saved config to: {}'.format(self.__file_path()))
@@ -89,6 +100,8 @@ class Config:
         self.__workspaces = data['workspaces']
       if 'active_workspace' in data:
         self.__active_workspace = data['active_workspace']
+      if 'log_level' in data:
+        self.set_log_level(data['log_level'])
       self.__logger.info('Loaded config from: {}'.format(self.__file_path()))
 
   def reset(self):
@@ -96,3 +109,4 @@ class Config:
     self.set_repl_prefix('> ')
     self.__workspaces = {} # Workspace name -> API token
     self.__active_workspace = None
+    self.__log_level = logging.INFO

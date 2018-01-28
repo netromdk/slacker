@@ -30,3 +30,25 @@ class Logger():
 
   def get(self):
     return self.logger
+
+  @staticmethod
+  def levels():
+    return [logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL]
+
+  @staticmethod
+  def level_from_name(name):
+    for level in Logger.levels():
+      if logging.getLevelName(level).lower() == name.lower():
+        return level
+    return None
+
+  @staticmethod
+  def level_names():
+    return [logging.getLevelName(level) for level in Logger.levels()]
+
+  @staticmethod
+  def set_level(level):
+    for logger in logging.Logger.manager.loggerDict.values():
+      logger.setLevel(level)
+      for handler in logger.handlers:
+        handler.setLevel(level)
