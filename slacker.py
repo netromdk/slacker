@@ -70,6 +70,11 @@ def main():
 
   (args, cmd_args) = parse_args()
 
+  if not config.active_workspace():
+    print("No workspace active!")
+    print("Run slacker with --init to interactively create a workspace and config file.")
+    return
+
   reg = Registrar()
   for cmd in Command.find_all():
     reg.register(cmd())
