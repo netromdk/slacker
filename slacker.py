@@ -57,9 +57,39 @@ def parse_args():
                                    "running that command.")
   parser.add_argument("-V", "--version", action = "version",
                       version = "%(prog)s {}".format(VERSION))
+  parser.add_argument("--init", action = "store_true",
+                      help = "Interactively initialize config and add workspace and API token.")
 
   args = parser.parse_args(args)
   return (args, cmd_args)
+
+def init():
+  config = Config.get()
+  if config.active_workspace():
+    # TODO: Create utility function for getting yes/no stdin input.
+    resp = input("Config already has active workspace '{}'.\nContinue and overwrite? [yN] "
+                 .format(config.active_workspace()))
+    resp = resp.strip().lower()
+    yes = resp == "y" or resp == "yes"
+    if not yes:
+      print("Aborting!")
+      return
+    config.reset()
+
+  workspace = ""
+  while len(workspace) == 0:
+    workspace = input("Workspace name: ").strip()
+
+  token = ""
+  while len(token) == 0:
+    token = input("API token: ").strip()
+
+  config.add_workspace(workspace, token)
+  config.set_active_workspace(workspace)
+  config.save()
+
+  print("Added new workspace '{}' to config and made it active.\nYou can now run slacker normally."
+        .format(workspace))
 
 def main():
   slacker_logger = Logger(__name__).get()
@@ -69,6 +99,10 @@ def main():
   config = Config.get()
 
   (args, cmd_args) = parse_args()
+
+  if args.init:
+    init()
+    return
 
   if not config.active_workspace():
     print("No workspace active!")
