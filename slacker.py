@@ -9,6 +9,7 @@ from slacker.commands.registrar import Registrar
 from slacker.environment.constants import VERSION
 from slacker.environment.config import Config
 from slacker.logger import Logger
+from slacker.utility import bool_response
 
 def signal_handler(signal, frame):
   print("\nCaught sig.. {}".format(signal))
@@ -66,12 +67,9 @@ def parse_args():
 def init():
   config = Config.get()
   if config.active_workspace():
-    # TODO: Create utility function for getting yes/no stdin input.
-    resp = input("Config already has active workspace '{}'.\nContinue and overwrite? [yN] "
-                 .format(config.active_workspace()))
-    resp = resp.strip().lower()
-    yes = resp == "y" or resp == "yes"
-    if not yes:
+    resp = bool_response("Config already has active workspace '{}'.\nContinue and overwrite?"
+                         .format(config.active_workspace()))
+    if not resp:
       print("Aborting!")
       return
     config.reset()
