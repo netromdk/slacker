@@ -6,7 +6,8 @@ from argparse import ArgumentParser
 
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
-from slacker.environment.common import COMMAND_PREFIX, VERSION
+from slacker.environment.constants import VERSION
+from slacker.environment.config import Config
 from slacker.logger import Logger
 
 def signal_handler(signal, frame):
@@ -15,7 +16,7 @@ def signal_handler(signal, frame):
 
 def readline():
   try:
-    return input(COMMAND_PREFIX).strip().lower()
+    return input(Config.get().repl_prefix()).strip().lower()
 
   # Handle EOF/^D nicely.
   except: return None
@@ -61,6 +62,9 @@ def parse_args():
   return (args, cmd_args)
 
 def main():
+  # Load config explicitly.
+  config = Config.get()
+
   slacker_logger = Logger(__name__).get()
   slacker_logger.debug('Starting Slacker...')
 
