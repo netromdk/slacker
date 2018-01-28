@@ -2,6 +2,7 @@
 
 import sys
 import signal
+import logging
 from argparse import ArgumentParser
 
 from slacker.commands.command import Command
@@ -62,6 +63,8 @@ def parse_args():
                       version = "%(prog)s {}".format(VERSION))
   parser.add_argument("--init", action = "store_true",
                       help = "Interactively initialize config and add workspace and API token.")
+  parser.add_argument("-v", "--verbose", action = "store_true",
+                      help = "Sets the log level to DEBUG for this session.")
 
   args = parser.parse_args(args)
   return (args, cmd_args)
@@ -115,6 +118,10 @@ def main():
   if reg.count() == 0:
     print("No commands found!")
     sys.exit(-1)
+
+  if args.verbose:
+    Logger.set_level(logging.DEBUG)
+    slacker_logger.debug('Verbose mode setting debug session log level.')
 
   if cmd_args:
     process(" ".join(cmd_args), reg)
