@@ -17,7 +17,9 @@ def signal_handler(signal, frame):
 
 def readline():
   try:
-    return input(Config.get().repl_prefix()).strip()
+    config = Config.get()
+    txt = "{}{}".format(config.active_workspace(), config.repl_prefix())
+    return input(txt).strip()
 
   # Handle EOF/^D nicely.
   except: return None
