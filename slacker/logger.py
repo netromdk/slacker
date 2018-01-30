@@ -7,22 +7,40 @@ class Logger():
 
   def __init__(self, module_name, log_level=logging.INFO):
     self.logger = logging.getLogger(module_name)
+
+    # Check if the logger is already loaded for that module
+    if self.logger.level != 0:
+      return
+
+    self.log_level = log_level
     self.logger.setLevel(log_level)
-    self.file_handler = self.__file_handler('slacker.log', log_level)
 
-    # Setup custom logging format
+    # Config log handler
+    self.file_handler = self.__file_handler('slacker.log')
     self.__configure_formatter(self.file_handler)
-
-    # Add the handlers
     self.logger.addHandler(self.file_handler)
 
-  def set_log_level(self, log_level=logging.INFO):
+    # Setup stream handler to log to STDOUT
+    self.stream_handler = self.__stream_handler()
+    self.__configure_formatter(self.stream_handler)
+    self.logger.addHandler(self.stream_handler)
+
+  def set_log_level(self, log_level):
+    self.log_level = log_level
     self.logger.setLevel(log_level)
 
-  def __file_handler(self, log_file, log_level=logging.INFO):
+  def disable_stream_handler(self):
+    self.logger.removeHandler(self.stream_handler)
+
+  def __file_handler(self, log_file):
     fh = logging.FileHandler(log_file)
-    fh.setLevel(log_level)
+    fh.setLevel(self.log_level)
     return fh
+
+  def __stream_handler(self):
+    sh = logging.StreamHandler()
+    sh.setLevel(self.log_level)
+    return sh
 
   def __configure_formatter(self, logger):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -49,6 +67,19 @@ class Logger():
   @staticmethod
   def set_level(level):
     for logger in logging.Logger.manager.loggerDict.values():
+      if not hasattr(logger, 'handlers'):
+        continue
+
       logger.setLevel(level)
       for handler in logger.handlers:
         handler.setLevel(level)
+
+  @staticmethod
+  def disable_stream_handlers():
+    for logger in logging.Logger.manager.loggerDict.values():
+      if not hasattr(logger, 'handlers'):
+        continue
+
+      for handler in logger.handlers:
+        if type(handler) == logging.StreamHandler:
+          logger.removeHandler(handler)
