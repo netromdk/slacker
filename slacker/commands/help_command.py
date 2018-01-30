@@ -17,5 +17,6 @@ class HelpCommand(Command):
       print("  {:<12}{:<12}{}".format(cmd.name(), aliases, cmd.description()))
 
   def action(self, args = None):
+    self.logger.info("Displaying available commands:")
     for cmd in Command.find_all():
       self.__show(cmd())
