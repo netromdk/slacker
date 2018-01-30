@@ -12,8 +12,11 @@ from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.utility import bool_response
 
+slacker_logger = None
+config = None
+
 def signal_handler(signal, frame):
-  print("\nCaught sig.. {}".format(signal))
+  slacker_logger.info("Caught sig.. {}".format(signal))
   sys.exit(0)
 
 def readline():
@@ -35,7 +38,7 @@ def process(line, reg):
 
   instance = reg.find(cmd.lower())
   if not instance:
-    print("Unknown command: {}".format(cmd))
+    slacker_logger.info("Unknown command: {}".format(cmd))
     return
 
   # Try parsing even with no arguments so default values are returned in the arguments namespace, if
@@ -67,11 +70,12 @@ def parse_args():
   parser.add_argument("-v", "--verbose", action = "store_true",
                       help = "Sets the log level to DEBUG for this session.")
 
+  parser.add_argument("-q", "--quiet", action="store_true", help="Disable stdout logging")
+
   args = parser.parse_args(args)
   return (args, cmd_args)
 
 def init():
-  config = Config.get()
   if config.active_workspace():
     resp = bool_response("Config already has active workspace '{}'.\nContinue and overwrite?"
                          .format(config.active_workspace()))
@@ -96,13 +100,19 @@ def init():
         .format(workspace))
 
 def main():
-  # Load config explicitly.
-  config = Config.get()
-
-  slacker_logger = Logger(__name__, config.log_level()).get()
-  slacker_logger.debug('Starting Slacker...')
-
   (args, cmd_args) = parse_args()
+
+  global config
+  config = Config.get(args.quiet)
+
+  global slacker_logger
+  slacker_logger = Logger(__name__, config.log_level()).get()
+
+  # Disable the registered startup logger stream handlers
+  if args.quiet:
+    Logger.disable_stream_handlers()
+
+  slacker_logger.debug('Starting Slacker...')
 
   if args.init:
     init()
@@ -117,12 +127,15 @@ def main():
     reg.register(cmd())
 
   if reg.count() == 0:
-    print("No commands found!")
+    slacker_logger.error("No commands found!")
     sys.exit(-1)
 
   if args.verbose:
     Logger.set_level(logging.DEBUG)
     slacker_logger.debug('Verbose mode setting debug session log level.')
+
+  if args.quiet:
+    Logger.disable_stream_handlers()
 
   if cmd_args:
     process(" ".join(cmd_args), reg)
