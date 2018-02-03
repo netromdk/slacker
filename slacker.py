@@ -141,11 +141,12 @@ def main():
   if args.quiet:
     Logger.disable_stream_handlers()
 
+  reg.action('api.test')
+  reg.action('auth.test')
+
   if cmd_args:
     process(" ".join(cmd_args), reg)
     return
-
-  reg.action('api.test')
 
   while True:
     line = readline()
