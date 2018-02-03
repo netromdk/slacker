@@ -45,7 +45,9 @@ def process(line, reg):
   # any.
   try:
     args = instance.parse_args([] if not args else args.split())
-  except: return
+  except Exception as ex:
+    print('Error: {}'.format(ex))
+    return
   instance.action(args)
 
 def parse_args():
