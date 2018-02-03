@@ -22,14 +22,17 @@ class AuthTestCommand(Command):
 
   def action(self, args = None):
     config = Config.get()
-    if args.workspace:
+    if args and args.workspace:
       ws = args.workspace
       token = config.workspace_token(ws)
     else:
       ws = config.active_workspace()
       token = config.active_workspace_token()
 
-    self.logger.debug("Checking auth for '{}'...".format(ws))
+    self.check(ws, token)
+
+  def check(self, workspace, token):
+    self.logger.debug("Checking auth for '{}'...".format(workspace))
 
     url = "https://slack.com/api/auth.test"
     data = {"token": token}
@@ -37,14 +40,14 @@ class AuthTestCommand(Command):
     data = response.json()
     if not 'ok' in data:
       self.logger.error('Invalid response! {}'.format(data))
-      return
+      return False
 
     if not data['ok']:
       error = ''
       if 'error' in data:
         error = data['error']
       self.logger.error('Unsuccessful: error: {}'.format(error))
-      return
+      return False
 
     self.logger.info("Auth successful!")
     self.logger.info("URL: {}".format(data['url']))
@@ -52,3 +55,4 @@ class AuthTestCommand(Command):
     self.logger.info("Workspace ID: {}".format(data['team_id']))
     self.logger.info("User: {}".format(data['user']))
     self.logger.info("User ID: {}".format(data['user_id']))
+    return True

@@ -5,6 +5,7 @@ import signal
 import logging
 from argparse import ArgumentParser
 
+from slacker.commands import auth_test_command
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
 from slacker.environment.constants import VERSION
@@ -91,7 +92,8 @@ def init():
     workspace = input("Workspace name: ").strip()
 
   token = ""
-  while len(token) == 0:
+  auth_test = auth_test_command.AuthTestCommand()
+  while len(token) == 0 or not auth_test.check(workspace, token):
     token = input("API token: ").strip()
 
   config.add_workspace(workspace, token)
