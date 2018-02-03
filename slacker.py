@@ -87,7 +87,7 @@ def init():
     config.reset()
 
   workspace = ""
-  while len(workspace) == 0:
+  while len(workspace) == 0 or workspace in config.workspaces():
     workspace = input("Workspace name: ").strip()
 
   token = ""
