@@ -21,8 +21,8 @@ class Config:
       # Load from file if it exists.
       try:
         self.load()
-      except:
-        self.__logger.debug('Config does not exist: {}'.format(self.__file_path()))
+      except Exception as ex:
+        self.__logger.debug('Config does not exist: {}\n{}'.format(self.__file_path(), ex))
 
       # Assign singleton instance.
       Config.__instance = self
