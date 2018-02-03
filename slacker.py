@@ -141,6 +141,8 @@ def main():
     process(" ".join(cmd_args), reg)
     return
 
+  reg.action('api.test')
+
   while True:
     line = readline()
     if line is None: break
