@@ -7,10 +7,13 @@ from slacker.logger import Logger
 class Config:
   __instance = None
 
-  def __init__(self):
+  def __init__(self, quiet_mode=False):
     """Get instance of Config via Config.get()."""
     if not Config.__instance:
-      self.__logger = Logger(self.__class__.__name__).get()
+      logger_instance = Logger(self.__class__.__name__)
+      self.__logger = logger_instance.get()
+      if quiet_mode:
+        logger_instance.disable_stream_handler()
 
       # Set default values.
       self.reset()
@@ -25,9 +28,9 @@ class Config:
       Config.__instance = self
 
   @staticmethod
-  def get():
+  def get(quiet_mode=False):
     if not Config.__instance:
-      Config()
+      Config(quiet_mode)
     return Config.__instance
 
   def repl_prefix(self):
