@@ -9,3 +9,4 @@ from . import log_command
 
 # Slack API commands:
 from . import files_list_command
+from . import api_test_command
