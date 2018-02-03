@@ -1,6 +1,7 @@
 import json
 import requests
 from .command import Command
+from argparse import ArgumentParser
 from slacker.environment.config import Config
 
 class AuthTestCommand(Command):
@@ -13,10 +14,20 @@ class AuthTestCommand(Command):
   def aliases(self):
     return ['t', 'test']
 
+  def make_parser(self):
+    parser = ArgumentParser(prog = self.name(), description = self.description())
+    parser.add_argument("-ws", "--workspace", choices = Config.get().workspaces(),
+                        help = "Check auth for specified workspace.")
+    return parser
+
   def action(self, args = None):
     config = Config.get()
-    ws = config.active_workspace()
-    token = config.active_workspace_token()
+    if args.workspace:
+      ws = args.workspace
+      token = config.workspace_token(ws)
+    else:
+      ws = config.active_workspace()
+      token = config.active_workspace_token()
 
     self.logger.debug("Checking auth for '{}'...".format(ws))
 
