@@ -13,6 +13,9 @@ from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
 from slacker.utility import bool_response, readline, parse_line, signal_handler, parse_args
 
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.contrib.completers import WordCompleter
+
 slacker_logger = None
 config = None
 
@@ -51,6 +54,18 @@ def check():
       slacker_logger.error('Error: {}'.format(ex))
       sys.exit(-1)
   slacker_logger.info('All good: {} valid commands'.format(reg.count()))
+
+def build_prompt_completer(register):
+  """Build REPL completion dictionary"""
+  cmds = []
+  cmds_meta = {}
+  for cmd in register.commands():
+    cmd_name = cmd.name()
+    cmds.append(cmd_name)
+    cmds_meta[cmd_name] = cmd.description()
+
+  return WordCompleter(cmds, meta_dict=cmds_meta, ignore_case=True)
+
 
 def init():
   if config.active_workspace():
@@ -131,8 +146,11 @@ def start_slacker():
     process(" ".join(cmd_args), reg)
     return
 
+  completer = build_prompt_completer(reg)
+  in_memory_history = InMemoryHistory()
+
   while True:
-    line = readline()
+    line = readline(completer, in_memory_history)
     if line is None: break
     elif not line: continue
     process(line, reg)

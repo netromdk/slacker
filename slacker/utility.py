@@ -4,6 +4,8 @@ import calendar
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 
+from prompt_toolkit import prompt
+
 from slacker.environment.constants import VERSION
 from slacker.environment.config import Config
 from slacker.logger import Logger
@@ -29,12 +31,12 @@ def ts_add_days(days):
   """Add an amount (+/-) of days to current timestamp in UTC."""
   return calendar.timegm((datetime.now() + timedelta(days)).utctimetuple())
 
-def readline():
+def readline(completer, history):
   """ Set prompt and read input """
   try:
     config = Config.get()
     txt = "{}{}".format(config.active_workspace(), config.repl_prefix())
-    return input(txt).strip()
+    return prompt(txt, completer=completer, history=history)
 
   # Handle EOF/^D nicely.
   except: return None

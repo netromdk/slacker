@@ -5,3 +5,4 @@ requests==2.18.4
 urllib3==1.22
 argparse==1.4.0
 humanfriendly==4.8
+prompt-toolkit==1.0.15
