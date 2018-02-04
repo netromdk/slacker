@@ -4,7 +4,7 @@ import requests
 
 from argparse import ArgumentParser
 
-from .command import Command
+from slacker.commands.command import Command
 from slacker.slack_api import SlackAPI
 
 class EmojiListCommand(Command):
