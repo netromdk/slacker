@@ -31,7 +31,11 @@ def process(line, reg):
   except Exception as ex:
     print('Error: {}'.format(ex))
     return
-  instance.action(args)
+
+  try:
+    instance.action(args)
+  except Exception as e:
+    slacker_logger.warning(str(e))
 
 def init():
   if config.active_workspace():
