@@ -6,6 +6,7 @@ from .general import help_command
 from .general import workspace_command
 from .general import exit_command
 from .general import log_command
+from .general import config_command
 
 # Slack API commands:
 from .files import files_list_command

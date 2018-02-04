@@ -23,7 +23,7 @@ class Config:
       try:
         self.load()
       except Exception as ex:
-        self.__logger.debug('Config does not exist: {}\n{}'.format(self.__file_path(), ex))
+        self.__logger.debug('Config does not exist: {}\n{}'.format(self.file_path(), ex))
 
       # Assign singleton instance.
       Config.__instance = self
@@ -62,7 +62,7 @@ class Config:
     del(self.__workspaces[name])
 
   def workspaces(self):
-    return self.__workspaces.keys()
+    return list(self.__workspaces.keys())
 
   def workspace_token(self, name):
     if not name in self.__workspaces:
@@ -86,20 +86,27 @@ class Config:
   def quiet_mode(self):
     return self.__quiet_mode
 
-  def __file_path(self):
+  def file_path(self):
     return os.path.expanduser('~/.slacker')
+
+  def safe_dict(self):
+    """Returns a safe dictionary of current values excluding any tokens."""
+    return {'repl_prefix': self.repl_prefix(),
+            'workspaces': self.workspaces(),
+            'active_workspace': self.active_workspace(),
+            'log_level': self.log_level()}
 
   def save(self):
     data = {'repl_prefix': self.repl_prefix(),
             'workspaces': self.__workspaces,
             'active_workspace': self.active_workspace(),
             'log_level': self.log_level()}
-    with open(self.__file_path(), 'w') as fp:
+    with open(self.file_path(), 'w') as fp:
       json.dump(data, fp, indent = 2)
-      self.__logger.debug('Saved config to: {}'.format(self.__file_path()))
+      self.__logger.debug('Saved config to: {}'.format(self.file_path()))
 
   def load(self):
-    with open(self.__file_path(), 'r') as fp:
+    with open(self.file_path(), 'r') as fp:
       data = json.load(fp)
       if 'repl_prefix' in data:
         self.set_repl_prefix(data['repl_prefix'])
@@ -109,7 +116,7 @@ class Config:
         self.__active_workspace = data['active_workspace']
       if 'log_level' in data:
         self.set_log_level(data['log_level'])
-      self.__logger.debug('Loaded config from: {}'.format(self.__file_path()))
+      self.__logger.debug('Loaded config from: {}'.format(self.file_path()))
 
   def reset(self):
     """Resets all values to default."""
