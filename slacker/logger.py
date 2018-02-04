@@ -20,9 +20,9 @@ class Logger():
     self.__configure_formatter(self.file_handler)
     self.logger.addHandler(self.file_handler)
 
-    # Setup stream handler to log to STDOUT
+    # Config STDOUT log handler
     self.stream_handler = self.__stream_handler()
-    self.__configure_formatter(self.stream_handler)
+    self.__configure_formatter(self.stream_handler, '%(message)s')
     self.logger.addHandler(self.stream_handler)
 
   def set_log_level(self, log_level):
@@ -42,8 +42,9 @@ class Logger():
     sh.setLevel(self.log_level)
     return sh
 
-  def __configure_formatter(self, logger):
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+  def __configure_formatter(self, logger,
+                            fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'):
+    formatter = logging.Formatter(fmt)
     logger.setFormatter(formatter)
 
   def get(self):
