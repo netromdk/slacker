@@ -96,7 +96,7 @@ class Config:
             'log_level': self.log_level()}
     with open(self.__file_path(), 'w') as fp:
       json.dump(data, fp, indent = 2)
-      self.__logger.info('Saved config to: {}'.format(self.__file_path()))
+      self.__logger.debug('Saved config to: {}'.format(self.__file_path()))
 
   def load(self):
     with open(self.__file_path(), 'r') as fp:
@@ -109,7 +109,7 @@ class Config:
         self.__active_workspace = data['active_workspace']
       if 'log_level' in data:
         self.set_log_level(data['log_level'])
-      self.__logger.info('Loaded config from: {}'.format(self.__file_path()))
+      self.__logger.debug('Loaded config from: {}'.format(self.__file_path()))
 
   def reset(self):
     """Resets all values to default."""

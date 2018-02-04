@@ -11,8 +11,7 @@ from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
-from slacker.utility import bool_response, readline, parse_line, signal_handler, \
-                            parse_args
+from slacker.utility import bool_response, readline, parse_line, signal_handler, parse_args
 
 slacker_logger = None
 config = None
@@ -40,6 +39,18 @@ def process(line, reg):
     instance.action(args)
   except Exception as e:
     slacker_logger.warning(str(e))
+
+def check():
+  slacker_logger.debug('Checking all commands for validty..')
+  reg = Registrar()
+  for cmd in Command.find_all():
+    try:
+      reg.register(cmd())
+    except Exception as ex:
+      slacker_logger.error('Command failed check: {}'.format(cmd))
+      slacker_logger.error('Error: {}'.format(ex))
+      sys.exit(-1)
+  slacker_logger.info('All good: {} valid commands'.format(reg.count()))
 
 def init():
   if config.active_workspace():
@@ -81,6 +92,10 @@ def start_slacker():
     Logger.disable_stream_handlers()
 
   slacker_logger.debug('Starting Slacker...')
+
+  if args.check:
+    check()
+    return
 
   if args.init:
     init()

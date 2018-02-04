@@ -78,8 +78,9 @@ def parse_args():
                       help = "Interactively initialize config and add workspace and API token.")
   parser.add_argument("-v", "--verbose", action = "store_true",
                       help = "Sets the log level to DEBUG for this session.")
-
   parser.add_argument("-q", "--quiet", action="store_true", help="Disable stdout logging")
+  parser.add_argument("--check", action = "store_true",
+                      help = "Checks that all commands are valid.")
 
   args = parser.parse_args(args)
   return (args, cmd_args)
