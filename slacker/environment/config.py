@@ -12,7 +12,8 @@ class Config:
     if not Config.__instance:
       logger_instance = Logger(self.__class__.__name__)
       self.__logger = logger_instance.get()
-      if quiet_mode:
+      self.__quiet_mode = quiet_mode
+      if self.__quiet_mode:
         logger_instance.disable_stream_handler()
 
       # Set default values.
@@ -81,6 +82,9 @@ class Config:
 
   def log_level(self):
     return self.__log_level
+
+  def quiet_mode(self):
+    return self.__quiet_mode
 
   def __file_path(self):
     return os.path.expanduser('~/.slacker')

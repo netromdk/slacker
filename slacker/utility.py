@@ -8,8 +8,6 @@ from slacker.environment.constants import VERSION
 from slacker.environment.config import Config
 from slacker.logger import Logger
 
-logger = Logger(__name__, Config.get().log_level()).get()
-
 def bool_response(msg, default = False):
   """Shows msg and retrieves input as yes/y or no/n, where the meaning of an empty/ENTER reply is
   defined by the default argument: if False it's "yN" and otherwise "Yn".
@@ -49,6 +47,13 @@ def parse_line(line):
 
 def signal_handler(signal, frame):
   """ Handle signal interrupts """
+  # TODO. Need to move have stream handlers are registered when slacker is in
+  # quiet mode
+  config = Config.get()
+  logger = Logger(__name__, config.log_level()).get()
+  if config.quiet_mode():
+    logger.disable_stream_handler()
+
   logger.info("Caught sig.. {}".format(signal))
   sys.exit(0)
 
