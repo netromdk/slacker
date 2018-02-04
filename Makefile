@@ -5,3 +5,4 @@ setup: clean
 
 clean:
 	rm -fr .venv
+	find . -iname __pycache__ | xargs rm -fr
