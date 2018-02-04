@@ -3,8 +3,8 @@ import requests
 from .command import Command
 from argparse import ArgumentParser
 from humanfriendly import format_size
-from slacker.environment.config import Config
 from slacker.utility import ts_add_days
+from slacker.slack_api import SlackAPI
 
 class FilesListCommand(Command):
   def name(self):
@@ -40,8 +40,6 @@ class FilesListCommand(Command):
 
   def action(self, args = None):
     print("Listing files..")
-    config = Config.get()
-    token = config.active_workspace_token()
     file_types = args.types
     if type(file_types) != type(str):
       file_types = ",".join(args.types)
@@ -55,17 +53,15 @@ class FilesListCommand(Command):
     if args.days_old:
       newer_than = ts_add_days(-1 * args.days_old)
 
+    slack_api = SlackAPI()
     while True:
       # Get next page of files.
-      url = "https://slack.com/api/files.list"
-      data = {"token": token,
-              "types": file_types,
-              "count": args.count,
-              "page": page,
-              "ts_from": newer_than,
-              "ts_to": older_than}
-      response = requests.post(url, data = data)
-      data = response.json()
+      data = slack_api.post('files.list',
+                            {"types": file_types,
+                             "count": args.count,
+                             "page": page,
+                             "ts_from": newer_than,
+                             "ts_to": older_than})
       if "error" in data:
         print("Error: {}".format(data["error"]))
         return
