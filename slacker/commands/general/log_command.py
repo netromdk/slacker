@@ -1,8 +1,9 @@
-from .command import Command
+import logging
+
+from slacker.commands.command import Command
+from slacker.commands.argument_parser import ArgumentParser
 from slacker.environment.config import Config
 from slacker.logger import Logger
-from slacker.commands.argument_parser import ArgumentParser
-import logging
 
 class LogCommand(Command):
   def name(self):

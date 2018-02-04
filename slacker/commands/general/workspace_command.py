@@ -1,4 +1,4 @@
-from .command import Command
+from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.environment.config import Config
 

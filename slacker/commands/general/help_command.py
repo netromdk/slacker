@@ -1,4 +1,4 @@
-from .command import Command
+from slacker.commands.command import Command
 
 class HelpCommand(Command):
   def name(self):

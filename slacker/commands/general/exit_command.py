@@ -1,5 +1,5 @@
-from .command import Command
 import sys
+from slacker.commands.command import Command
 
 class ExitCommand(Command):
   def name(self):
