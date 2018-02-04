@@ -1,7 +1,6 @@
-import json
-import requests
 import uuid
 from .command import Command
+from slacker.slack_api import SlackAPI
 
 class ApiTestCommand(Command):
   def name(self):
@@ -15,11 +14,8 @@ class ApiTestCommand(Command):
 
   def action(self, args = None):
     self.logger.debug("Checking Slack...")
-    url = "https://slack.com/api/api.test"
     nonce = uuid.uuid4().hex
-    data = {"foo": nonce}
-    response = requests.post(url, data = data)
-    data = response.json()
+    data = SlackAPI().post('api.test', {'foo': nonce})
     if not 'ok' in data or not 'args' in data or not 'foo' in data['args']:
       self.logger.warning('Invalid response! {}'.format(data))
       return

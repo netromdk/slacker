@@ -1,5 +1,3 @@
-import json
-import requests
 from .command import Command
 from argparse import ArgumentParser
 from humanfriendly import format_size

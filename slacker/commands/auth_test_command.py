@@ -1,8 +1,7 @@
-import json
-import requests
 from .command import Command
 from argparse import ArgumentParser
 from slacker.environment.config import Config
+from slacker.slack_api import SlackAPI
 
 class AuthTestCommand(Command):
   def name(self):
@@ -34,10 +33,7 @@ class AuthTestCommand(Command):
   def check(self, workspace, token):
     self.logger.debug("Checking auth for '{}'...".format(workspace))
 
-    url = "https://slack.com/api/auth.test"
-    data = {"token": token}
-    response = requests.post(url, data = data)
-    data = response.json()
+    data = SlackAPI(token).post('auth.test')
     if not 'ok' in data:
       self.logger.error('Invalid response! {}'.format(data))
       return False
