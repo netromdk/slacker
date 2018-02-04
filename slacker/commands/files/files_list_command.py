@@ -1,8 +1,8 @@
-from .command import Command
+from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from humanfriendly import format_size
 from slacker.utility import ts_add_days
 from slacker.slack_api import SlackAPI
+from humanfriendly import format_size
 
 class FilesListCommand(Command):
   def name(self):
