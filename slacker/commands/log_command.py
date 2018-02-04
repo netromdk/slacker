@@ -31,4 +31,4 @@ class LogCommand(Command):
 
     else:
       level = logging.getLevelName(self.logger.getEffectiveLevel())
-      print("Log level: {}".format(level))
+      self.logger.info("Log level: {}".format(level))

@@ -12,5 +12,5 @@ class ExitCommand(Command):
     return ["q", "quit"]
 
   def action(self, args = None):
-    print("Exitting..")
+    self.logger.info("Exiting..")
     sys.exit(0)

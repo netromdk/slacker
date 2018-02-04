@@ -37,7 +37,7 @@ class FilesListCommand(Command):
     return parser
 
   def action(self, args = None):
-    print("Listing files..")
+    self.logger.info("Listing files..")
     file_types = args.types
     if type(file_types) != type(str):
       file_types = ",".join(args.types)
@@ -61,14 +61,14 @@ class FilesListCommand(Command):
                              "ts_from": newer_than,
                              "ts_to": older_than})
       if "error" in data:
-        print("Error: {}".format(data["error"]))
+        self.logger.error("Error: {}".format(data["error"]))
         return
 
       files = data["files"]
       if len(files) == 0:
         break
       for f in files:
-        print("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
+        self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
         totalFiles += 1
         totalSize += f["size"]
 
@@ -80,4 +80,4 @@ class FilesListCommand(Command):
         page += 1
       else: break
 
-    print("{} files, {}".format(totalFiles, format_size(totalSize, binary = True)))
+    self.logger.info("{} files, {}".format(totalFiles, format_size(totalSize, binary = True)))

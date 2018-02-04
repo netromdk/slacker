@@ -33,7 +33,7 @@ def process(line, reg):
     # If --help is used with a command then we don't exit the program!
     return
   except Exception as ex:
-    print('Error: {}'.format(ex))
+    slacker_logger.error('Error: {}'.format(ex))
     return
 
   try:
@@ -46,7 +46,7 @@ def init():
     resp = bool_response("Config already has active workspace '{}'.\nContinue and overwrite?"
                          .format(config.active_workspace()))
     if not resp:
-      print("Aborting!")
+      slacker_logger.error("Aborting!")
       return
     config.reset()
 
@@ -63,8 +63,8 @@ def init():
   config.set_active_workspace(workspace)
   config.save()
 
-  print("Added new workspace '{}' to config and made it active.\nYou can now run slacker normally."
-        .format(workspace))
+  slacker_logger.info("Added new workspace '{}' to config and made it active.\n"
+                      "You can now run slacker normally.".format(workspace))
 
 def start_slacker():
   signal.signal(signal.SIGINT, signal_handler)
@@ -86,8 +86,8 @@ def start_slacker():
     init()
 
   if not config.active_workspace():
-    print("No workspace active!")
-    print("Run slacker with --init to interactively create a workspace and config file.")
+    slacker_logger.error("No workspace active!")
+    slacker_logger.error("Run slacker with --init to interactively create a workspace and config file.")
     return
 
   reg = Registrar()
