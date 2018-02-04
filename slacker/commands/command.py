@@ -50,7 +50,7 @@ class Command(ABC):
           raise ValueError("Command alias is invalid '{}' in {}".format(alias, derive_cls))
 
   def make_parser(self):
-    """Override to define argparse.ArgumentParser."""
+    """Override to define slacker.commands.argument_parser.ArgumentParser."""
     return None
 
   def parse_args(self, args):

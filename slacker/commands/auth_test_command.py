@@ -1,5 +1,5 @@
 from .command import Command
-from argparse import ArgumentParser
+from slacker.commands.argument_parser import ArgumentParser
 from slacker.environment.config import Config
 from slacker.slack_api import SlackAPI, SlackAPIException
 
