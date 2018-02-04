@@ -1,5 +1,5 @@
 import uuid
-from .command import Command
+from slacker.commands.command import Command
 from slacker.slack_api import SlackAPI, SlackAPIException
 
 class ApiTestCommand(Command):
