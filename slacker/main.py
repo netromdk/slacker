@@ -7,6 +7,7 @@ import logging
 from slacker.commands import auth_test_command
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
+from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
@@ -28,6 +29,9 @@ def process(line, reg):
   # any.
   try:
     args = instance.parse_args([] if not args else args.split())
+  except DidNotExitException:
+    # If --help is used with a command then we don't exit the program!
+    return
   except Exception as ex:
     print('Error: {}'.format(ex))
     return
