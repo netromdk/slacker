@@ -69,7 +69,8 @@ def parse_args():
 
   parser = ArgumentParser(description = "Useful Slack utilities and REPL.",
                           usage = "%(prog)s [options] [-- command [args..]]",
-                          epilog = "By passing '--', it signals that Slacker arguments end and a "
+                          epilog = "Most commands support -h|--help to see how they work. By passing "
+                                   "'--', it signals that Slacker arguments end and a "
                                    "single command and arguments begin. Slacker will exit after "
                                    "running that command.")
   parser.add_argument("-V", "--version", action = "version",
