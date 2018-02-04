@@ -47,8 +47,8 @@ def parse_line(line):
 
 def signal_handler(signal, frame):
   """ Handle signal interrupts """
-  # TODO. Need to move have stream handlers are registered when slacker is in
-  # quiet mode
+  # TODO. Need to move how stream handlers are registered when slacker is not
+  # in quiet mode
   config = Config.get()
   logger = Logger(__name__, config.log_level()).get()
   if config.quiet_mode():

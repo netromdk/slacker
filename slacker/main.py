@@ -9,6 +9,7 @@ from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
 from slacker.environment.config import Config
 from slacker.logger import Logger
+from slacker.slack_api import SlackAPIException
 from slacker.utility import bool_response, readline, parse_line, signal_handler, \
                             parse_args
 
@@ -96,8 +97,12 @@ def start_slacker():
   if args.quiet:
     Logger.disable_stream_handlers()
 
-  reg.action('api.test')
-  reg.action('auth.test')
+  try:
+    reg.action('api.test')
+    reg.action('auth.test')
+  except SlackAPIException as e:
+    slacker_logger.error(str(e))
+    sys.exit(-1)
 
   if cmd_args:
     process(" ".join(cmd_args), reg)

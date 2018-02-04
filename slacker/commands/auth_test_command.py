@@ -1,7 +1,7 @@
 from .command import Command
 from argparse import ArgumentParser
 from slacker.environment.config import Config
-from slacker.slack_api import SlackAPI
+from slacker.slack_api import SlackAPI, SlackAPIException
 
 class AuthTestCommand(Command):
   def name(self):
@@ -35,15 +35,13 @@ class AuthTestCommand(Command):
 
     data = SlackAPI(token).post('auth.test')
     if not 'ok' in data:
-      self.logger.error('Invalid response! {}'.format(data))
-      return False
+      raise SlackAPIException('Invalid response! {}'.format(data))
 
     if not data['ok']:
       error = ''
       if 'error' in data:
         error = data['error']
-      self.logger.error('Unsuccessful: error: {}'.format(error))
-      return False
+      raise SlackAPIException('Unsuccessful: error: {}'.format(error))
 
     self.logger.info("Auth successful!")
     self.logger.info("URL: {}".format(data['url']))

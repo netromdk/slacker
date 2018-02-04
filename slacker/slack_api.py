@@ -3,6 +3,9 @@ import json
 
 from slacker.environment.config import Config
 
+class SlackAPIException(Exception):
+  pass
+
 class SlackAPI:
   """Encapsulates sending requests to the Slack API and getting back JSON responses."""
 

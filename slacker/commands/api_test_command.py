@@ -1,6 +1,6 @@
 import uuid
 from .command import Command
-from slacker.slack_api import SlackAPI
+from slacker.slack_api import SlackAPI, SlackAPIException
 
 class ApiTestCommand(Command):
   def name(self):
@@ -17,19 +17,16 @@ class ApiTestCommand(Command):
     nonce = uuid.uuid4().hex
     data = SlackAPI().post('api.test', {'foo': nonce})
     if not 'ok' in data or not 'args' in data or not 'foo' in data['args']:
-      self.logger.warning('Invalid response! {}'.format(data))
-      return
+      raise SlackAPIException('Invalid response! {}'.format(data))
 
     if not data['ok']:
       error = ''
       if 'error' in data:
         error = data['error']
-      self.logger.warning('Unsuccessful: error: {}'.format(error))
-      return
+      raise SlackAPIException('Unsuccessful: error: {}'.format(error))
 
     foo = data['args']['foo']
     if foo != nonce:
-      self.logger.warning("Received incorrect nonce: {} vs. {}".format(foo, nonce))
-      return
+      raise SlackAPIException("Received incorrect nonce: {} vs. {}".format(foo, nonce))
 
     self.logger.info("API is online.")
