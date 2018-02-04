@@ -13,6 +13,7 @@ from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
 from slacker.utility import bool_response, readline, parse_line, signal_handler, parse_args
 
+from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.contrib.completers import WordCompleter
 
@@ -83,7 +84,7 @@ def init():
   token = ""
   auth_test = auth_test_command.AuthTestCommand()
   while len(token) == 0 or not auth_test.check(workspace, token):
-    token = input("API token: ").strip()
+    token = prompt('API token: ', is_password = True).strip()
 
   config.add_workspace(workspace, token)
   config.set_active_workspace(workspace)
