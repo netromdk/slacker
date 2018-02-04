@@ -11,9 +11,6 @@ class FilesListCommand(Command):
   def description(self):
     return "Displays info about files on Slack."
 
-  def aliases(self):
-    return ["files"]
-
   def make_parser(self):
     file_types = ['all', 'spaces', 'snippets', 'images', 'gdocs', 'zips', 'pdfs']
     parser = ArgumentParser(prog = self.name(), description = self.description())

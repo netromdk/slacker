@@ -9,9 +9,6 @@ class ApiTestCommand(Command):
   def description(self):
     return "Checks that the Slack API is online."
 
-  def aliases(self):
-    return []
-
   def action(self, args = None):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex

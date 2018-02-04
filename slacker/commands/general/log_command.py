@@ -12,9 +12,6 @@ class LogCommand(Command):
   def description(self):
     return "Displays current log level."
 
-  def aliases(self):
-    return ["l"]
-
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument("-l", "--level", choices = Logger.level_names(),

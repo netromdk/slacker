@@ -9,9 +9,6 @@ class WorkspaceCommand(Command):
   def description(self):
     return "Displays predefined workspaces and which one is active."
 
-  def aliases(self):
-    return ["ws"]
-
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = "Displays predefined workspaces.")
     parser.add_argument("-s", "--set", metavar = "WORKSPACE",

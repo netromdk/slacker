@@ -7,14 +7,8 @@ class HelpCommand(Command):
   def description(self):
     return "Displays general help."
 
-  def aliases(self):
-    return ["h"]
-
   def __show(self, cmd):
-    aliases = ""
-    if cmd.aliases():
-      aliases = " [{}]".format(", ".join(cmd.aliases()))
-    self.logger.info("  {:<12}{:<12}{}".format(cmd.name(), aliases, cmd.description()))
+    self.logger.info("  {:<12}{}".format(cmd.name(), cmd.description()))
 
   def action(self, args = None):
     self.logger.info("Displaying available commands:")

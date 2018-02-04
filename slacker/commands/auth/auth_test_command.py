@@ -10,9 +10,6 @@ class AuthTestCommand(Command):
   def description(self):
     return "Checks authentication and describes user identity."
 
-  def aliases(self):
-    return ['t', 'test']
-
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument("-ws", "--workspace", choices = Config.get().workspaces(),

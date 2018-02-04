@@ -7,8 +7,8 @@ import re
 COMMAND_NAME_REGEX = re.compile("([\w\d][\w\d\.]*)?[\w\d]+")
 
 class Command(ABC):
-  """Command encapsulates a Slacker command with a name, description, help text, alises, and the
-  action to perform.
+  """Command encapsulates a Slacker command with a name, description, help text, and the action to
+  perform.
   """
 
   def __init__(self):
@@ -29,25 +29,12 @@ class Command(ABC):
     """Returns the help text of the command."""
     return self.description()
 
-  def aliases(self):
-    """Returns a list of aliases defined for this command."""
-    return None
-
   def __validate(self):
     """Validates that the command is valid and conforming with the requirements."""
     derive_cls = type(self).__mro__[0]
 
     if not COMMAND_NAME_REGEX.fullmatch(self.name()):
       raise ValueError("Command name is invalid '{}' in {}".format(self.name(), derive_cls))
-
-    a = self.aliases()
-    if a is not None and type(a) != type(()) and type(a) != type([]):
-      raise ValueError("Command aliases must be either a set, a list or None: '{}', {} in {}"
-                       .format(a, type(a), derive_cls))
-    elif a:
-      for alias in a:
-        if not COMMAND_NAME_REGEX.fullmatch(alias):
-          raise ValueError("Command alias is invalid '{}' in {}".format(alias, derive_cls))
 
   def make_parser(self):
     """Override to define slacker.commands.argument_parser.ArgumentParser."""

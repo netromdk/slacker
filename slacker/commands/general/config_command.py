@@ -9,9 +9,6 @@ class ConfigCommand(Command):
   def description(self):
     return "Shows current config state."
 
-  def aliases(self):
-    return ["c", "conf"]
-
   def action(self, args = None):
     config = Config.get()
     self.logger.info("Current config state of '{}'".format(config.file_path()))

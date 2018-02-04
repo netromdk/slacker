@@ -14,9 +14,6 @@ class EmojiListCommand(Command):
   def description(self):
     return 'Lists custom emojis in workspace'
 
-  def aliases(self):
-    return ['emojis']
-
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument('-p', '--path', type = str,
