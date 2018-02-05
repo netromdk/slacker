@@ -13,14 +13,6 @@ class ApiTestCommand(Command):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex
     data = SlackAPI().post('api.test', {'foo': nonce})
-    if not 'ok' in data or not 'args' in data or not 'foo' in data['args']:
-      raise SlackAPIException('Invalid response! {}'.format(data))
-
-    if not data['ok']:
-      error = ''
-      if 'error' in data:
-        error = data['error']
-      raise SlackAPIException('Unsuccessful: error: {}'.format(error))
 
     foo = data['args']['foo']
     if foo != nonce:

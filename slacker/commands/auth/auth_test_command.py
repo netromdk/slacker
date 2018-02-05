@@ -31,15 +31,6 @@ class AuthTestCommand(Command):
     self.logger.debug("Checking auth for '{}'...".format(workspace))
 
     data = SlackAPI(token).post('auth.test')
-    if not 'ok' in data:
-      raise SlackAPIException('Invalid response! {}'.format(data))
-
-    if not data['ok']:
-      error = ''
-      if 'error' in data:
-        error = data['error']
-      raise SlackAPIException('Unsuccessful: error: {}'.format(error))
-
     self.logger.info("Auth successful!")
     self.logger.info("URL: {}".format(data['url']))
     self.logger.info("Workspace: {}".format(data['team']))

@@ -57,9 +57,6 @@ class FilesListCommand(Command):
                              "page": page,
                              "ts_from": newer_than,
                              "ts_to": older_than})
-      if "error" in data:
-        self.logger.error("Error: {}".format(data["error"]))
-        return
 
       files = data["files"]
       if len(files) == 0:
