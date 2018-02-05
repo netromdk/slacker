@@ -137,8 +137,9 @@ def start_slacker():
     Logger.disable_stream_handlers()
 
   try:
-    reg.action('api.test')
-    reg.action('auth.test')
+    if not args.no_tests:
+      reg.action('api.test')
+      reg.action('auth.test')
   except Exception as ex:
     slacker_logger.error(str(ex))
     slacker_logger.warning('Make sure you have internet access and verify your tokens!')
