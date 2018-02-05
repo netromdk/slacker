@@ -13,7 +13,7 @@ The first invocation of Slacker requires to setup a workspace using the `--init`
 ```sh
 % ./slacker.py --init
 Workspace name: myworkspace
-API token: myworkspacetoken
+API token: ****************************************************************************
 Added new workspace 'myworkspace' to config and made it active.
 You can now run slacker normally.
 myworkspace> 
