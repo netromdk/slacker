@@ -8,7 +8,7 @@ class HelpCommand(Command):
     return "Displays general help."
 
   def __show(self, cmd):
-    self.logger.info("  {:<12}{}".format(cmd.name(), cmd.description()))
+    self.logger.info("  {:<20}{}".format(cmd.name(), cmd.description()))
 
   def action(self, args = None):
     self.logger.info("Displaying available commands:")
