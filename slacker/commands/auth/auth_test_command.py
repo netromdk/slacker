@@ -31,10 +31,10 @@ class AuthTestCommand(Command):
     self.logger.debug("Checking auth for '{}'...".format(workspace))
 
     data = SlackAPI(token).post('auth.test')
-    self.logger.info("Auth successful!")
-    self.logger.info("URL: {}".format(data['url']))
-    self.logger.info("Workspace: {}".format(data['team']))
-    self.logger.info("Workspace ID: {}".format(data['team_id']))
-    self.logger.info("User: {}".format(data['user']))
-    self.logger.info("User ID: {}".format(data['user_id']))
+    self.logger.info("Auth successful.")
+    self.logger.debug("URL: {}".format(data['url']))
+    self.logger.debug("Workspace: {}".format(data['team']))
+    self.logger.debug("Workspace ID: {}".format(data['team_id']))
+    self.logger.debug("User: {}".format(data['user']))
+    self.logger.debug("User ID: {}".format(data['user_id']))
     return True
