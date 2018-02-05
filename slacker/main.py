@@ -139,8 +139,9 @@ def start_slacker():
   try:
     reg.action('api.test')
     reg.action('auth.test')
-  except SlackAPIException as e:
-    slacker_logger.error(str(e))
+  except Exception as ex:
+    slacker_logger.error(str(ex))
+    slacker_logger.warning('Make sure you have internet access and verify your tokens!')
     sys.exit(-1)
 
   if cmd_args:
