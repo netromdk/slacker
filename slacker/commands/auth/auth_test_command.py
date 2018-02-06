@@ -1,7 +1,7 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.environment.config import Config
-from slacker.slack_api import SlackAPI, SlackAPIException
+from slacker.utility import verify_token
 
 class AuthTestCommand(Command):
   def name(self):
@@ -25,12 +25,9 @@ class AuthTestCommand(Command):
       ws = config.active_workspace()
       token = config.active_workspace_token()
 
-    self.check(ws, token)
+    self.logger.debug("Checking auth for '{}'...".format(ws))
 
-  def check(self, workspace, token):
-    self.logger.debug("Checking auth for '{}'...".format(workspace))
-
-    data = SlackAPI(token).post('auth.test')
+    data = verify_token(token)
     self.logger.info("Auth successful.")
     self.logger.debug("URL: {}".format(data['url']))
     self.logger.debug("Workspace: {}".format(data['team']))

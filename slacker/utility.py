@@ -9,6 +9,7 @@ from prompt_toolkit import prompt
 from slacker.environment.constants import VERSION
 from slacker.environment.config import Config
 from slacker.logger import Logger
+from slacker.slack_api import SlackAPI
 
 def ts_add_days(days):
   """Add an amount (+/-) of days to current timestamp in UTC."""
@@ -73,3 +74,10 @@ def parse_args():
 
   args = parser.parse_args(args)
   return (args, cmd_args)
+
+def verify_token(token):
+  try:
+    return SlackAPI(token).post('auth.test')
+  except Exception as ex:
+    create_logger(__name__).warning(ex)
+  return None
