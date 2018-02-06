@@ -11,11 +11,12 @@ from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
-from slacker.utility import bool_response, readline, parse_line, signal_handler, parse_args
+from slacker.utility import readline, parse_line, signal_handler, parse_args
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.contrib.completers import WordCompleter
+from prompt_toolkit.shortcuts import confirm
 
 slacker_logger = None
 config = None
@@ -70,8 +71,8 @@ def build_prompt_completer(register):
 
 def init():
   if config.active_workspace():
-    resp = bool_response("Config already has active workspace '{}'.\nContinue and overwrite?"
-                         .format(config.active_workspace()))
+    resp = confirm("Config already has active workspace '{}'.\nContinue and overwrite? "
+                   .format(config.active_workspace()))
     if not resp:
       slacker_logger.error("Aborting!")
       return
