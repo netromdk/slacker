@@ -30,16 +30,17 @@ def parse_line(line):
     return line.split(maxsplit = 1)
   return (line, None)
 
-def signal_handler(signal, frame):
-  """ Handle signal interrupts """
-  # TODO. Need to move how stream handlers are registered when slacker is not
-  # in quiet mode
+def create_logger(name):
+  """Convenience function for creating a logger that respects quiet mode if set."""
   config = Config.get()
-  logger = Logger(__name__, config.log_level()).get()
+  logger = Logger(name, config.log_level()).get()
   if config.quiet_mode():
     logger.disable_stream_handler()
+  return logger
 
-  logger.info("Caught sig.. {}".format(signal))
+def signal_handler(signal, frame):
+  """Handle signal interrupts."""
+  create_logger(__name__).info("Caught sig.. {}".format(signal))
   sys.exit(0)
 
 def parse_args():
