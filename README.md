@@ -3,17 +3,16 @@ Slacker is a tool designed to make it easier to do admin tasks and general utili
 
 # Table of Contents
 * [First Run](#first-run)
-* [General Commands](#general-commands)
+* [Commands](#commands)
 * [CLI Usage](#cli-usage)
 * [Development Environment](#development-environment)
 * [Contributing](#contributing)
 
 # First Run
 The first invocation of Slacker requires to setup a workspace using the `--init` argument:
-```sh
+```
 % ./slacker.py --init
-Workspace name: myworkspace
-API token: ****************************************************************************
+Input workspace token: ****************************************************************************
 Added new workspace 'myworkspace' to config and made it active.
 You can now run slacker normally.
 myworkspace> 
@@ -21,14 +20,19 @@ myworkspace>
 
 Slacker is ready for use afterwards with "myworkspace" as the active workspace. _Note that it is recommended to employ a user token, not a bot token!_
 
-# General Commands
+# Commands
 ```
-help         [h]        Displays general help.
-workspace    [ws]       Displays predefined workspaces and which one is active.
-log          [l]        Displays current log level.
-auth.test    [t, test]  Checks authentication and describes user identity.
-api.test                Checks that the Slack API is online.
-exit         [q, quit]  Exits Slacker.
+Displaying available commands:
+  help                Displays general help.
+  log                 Displays current log level.
+  exit                Exits Slacker.
+  config              Shows current config state.
+  workspace           Displays predefined workspaces and which one is active.
+  api.test            Checks that the Slack API is online.
+  files.list          Displays info about files on Slack.
+  files.delete        Delete files uploaded to and stored on Slack.
+  emoji.list          Lists custom emojis in workspace
+  auth.test           Checks authentication and describes user identity.
 ```
 
 # CLI Usage
@@ -45,9 +49,11 @@ optional arguments:
   --init         Interactively initialize config and add workspace and API
                  token.
   --check        Checks that all commands are valid.
+  --no-tests     Do not do API and auth tests at startup.
 
-By passing '--', it signals that Slacker arguments end and a single command
-and arguments begin. Slacker will exit after running that command.
+Most commands support -h|--help to see how they work. By passing '--', it
+signals that Slacker arguments end and a single command and arguments begin.
+Slacker will exit after running that command.
 ```
 
 # Development Environment
