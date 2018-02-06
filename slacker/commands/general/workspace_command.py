@@ -14,18 +14,19 @@ class WorkspaceCommand(Command):
     parser = ArgumentParser(prog = self.name(), description = "Displays predefined workspaces.")
     parser.add_argument("-s", "--set", metavar = "WORKSPACE",
                         help = "Set another workspace active.")
+    parser.add_argument("-c", "--create", action = 'store_true', help = "Create a workspace.")
+    parser.add_argument("-r", "--remove", metavar = "WORKSPACE", help = "Remove a workspace.")
     return parser
 
   def action(self, args = None):
     config = Config.get()
-    workspaces = config.workspaces()
 
     if args.set:
       workspace = args.set
       if workspace == config.active_workspace():
         self.logger.warning("Workspace already active!")
         return
-      elif not workspace in workspaces:
+      elif not workspace in config.workspaces():
         self.logger.warning("Unknown workspace: '{}'".format(workspace))
         return
 
