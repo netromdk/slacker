@@ -4,14 +4,13 @@ import sys
 import signal
 import logging
 
-from slacker.commands import auth_test_command
 from slacker.commands.command import Command
 from slacker.commands.registrar import Registrar
 from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
-from slacker.utility import readline, parse_line, signal_handler, parse_args
+from slacker.utility import readline, parse_line, signal_handler, parse_args, workspace_token_prompt
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
@@ -78,14 +77,7 @@ def init():
       return
     config.reset()
 
-  workspace = ""
-  while len(workspace) == 0 or workspace in config.workspaces():
-    workspace = input("Workspace name: ").strip()
-
-  token = ""
-  auth_test = auth_test_command.AuthTestCommand()
-  while len(token) == 0 or not auth_test.check(workspace, token):
-    token = prompt('API token: ', is_password = True).strip()
+  (workspace, token) = workspace_token_prompt()
 
   config.add_workspace(workspace, token)
   config.set_active_workspace(workspace)

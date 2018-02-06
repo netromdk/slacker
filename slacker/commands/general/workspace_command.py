@@ -1,6 +1,7 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.environment.config import Config
+from slacker.utility import workspace_token_prompt
 
 class WorkspaceCommand(Command):
   def name(self):
@@ -31,8 +32,17 @@ class WorkspaceCommand(Command):
       config.set_active_workspace(workspace)
       config.save()
 
-    else:
-      self.logger.info("Predefined workspaces:")
-      for workspace in workspaces:
-        active = " (active)" if (config.active_workspace() == workspace) else ""
-        self.logger.info("  {}{}".format(workspace, active))
+    elif args.create:
+      (workspace, token) = workspace_token_prompt()
+      config.add_workspace(workspace, token)
+      config.save()
+
+    elif args.remove:
+      workspace = args.remove
+      config.remove_workspace(workspace)
+      config.save()
+
+    self.logger.info("Workspaces:")
+    for workspace in config.workspaces():
+      active = " (active)" if (config.active_workspace() == workspace) else ""
+      self.logger.info("  {}{}".format(workspace, active))

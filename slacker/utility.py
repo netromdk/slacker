@@ -81,3 +81,18 @@ def verify_token(token):
   except Exception as ex:
     create_logger(__name__).warning(ex)
   return None
+
+def workspace_token_prompt(msg = 'Input workspace token: '):
+  logger = create_logger(__name__)
+  config = Config.get()
+  workspace = ''
+  while len(workspace) == 0 or workspace in config.workspaces():
+    workspace = input('Workspace name: ').strip()
+
+  token = ""
+  while True:
+    token = prompt('API token: ', is_password = True).strip()
+    if len(token) == 0: continue
+    if verify_token(token): break
+
+  return (workspace, token)
