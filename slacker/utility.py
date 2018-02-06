@@ -86,13 +86,14 @@ def workspace_token_prompt(msg = 'Input workspace token: '):
   logger = create_logger(__name__)
   config = Config.get()
   workspace = ''
-  while len(workspace) == 0 or workspace in config.workspaces():
-    workspace = input('Workspace name: ').strip()
-
-  token = ""
+  token = ''
   while True:
-    token = prompt('API token: ', is_password = True).strip()
+    token = prompt(msg, is_password = True).strip()
     if len(token) == 0: continue
-    if verify_token(token): break
-
-  return (workspace, token)
+    data = verify_token(token)
+    if not data: continue
+    workspace = data['team']
+    if workspace in config.workspaces():
+      logger.warning('Workspace of token already exists: {}'.format(workspace))
+      continue
+    return (workspace, token)
