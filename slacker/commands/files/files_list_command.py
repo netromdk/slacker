@@ -31,10 +31,17 @@ class FilesListCommand(Command):
                                "amount.")
     parser.add_argument("--older-than", type = int, metavar = "DAYS",
                         help = "Show only files that are older than input amount of days.")
+    parser.add_argument('--total-size', action = 'store_true',
+                        help = 'Compute total file size and don\'t print file names. Implies '
+                               '--all and disregards filtering.')
     return parser
 
   def action(self, args = None):
-    self.logger.info("Listing files..")
+    if not args.total_size:
+      self.logger.info("Listing files..")
+    else:
+      args.all = True
+
     file_types = args.types
     if type(file_types) != type(str):
       file_types = ",".join(args.types)
@@ -42,10 +49,10 @@ class FilesListCommand(Command):
     totalSize = 0
     page = args.page if not args.all else 1
     older_than = 'now'
-    if args.older_than:
+    if args.older_than and not args.total_size:
       older_than = ts_add_days(-1 * args.older_than)
     newer_than = 0
-    if args.days_old:
+    if args.days_old and not args.total_size:
       newer_than = ts_add_days(-1 * args.days_old)
 
     slack_api = SlackAPI()
@@ -62,7 +69,8 @@ class FilesListCommand(Command):
       if len(files) == 0:
         break
       for f in files:
-        self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
+        if not args.total_size:
+          self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
         totalFiles += 1
         totalSize += f["size"]
 
