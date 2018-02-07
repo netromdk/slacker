@@ -1,7 +1,11 @@
+import re
+
 from abc import ABC, abstractmethod
+
 from slacker.logger import Logger
 from slacker.environment.config import Config
-import re
+
+from prompt_toolkit.contrib.completers import WordCompleter
 
 # The "." can only be in the middle of the command name.
 COMMAND_NAME_REGEX = re.compile("([\w\d][\w\d\.]*)?[\w\d]+")
@@ -39,6 +43,13 @@ class Command(ABC):
   def make_parser(self):
     """Override to define slacker.commands.argument_parser.ArgumentParser."""
     return None
+
+  def make_completer(self):
+    """Creates a word completer from arguments parser if defined."""
+    parser = self.make_parser()
+    if not parser:
+      return None
+    return WordCompleter(parser.words(), meta_dict = parser.meta(), ignore_case = True)
 
   def parse_args(self, args):
     """Parse arguments from a list of strings. The output can be given to action()."""
