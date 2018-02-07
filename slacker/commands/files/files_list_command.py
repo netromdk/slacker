@@ -17,8 +17,10 @@ class FilesListCommand(Command):
     parser.add_argument("-a", "--all", action = "store_true",
                         help = "Return all files. This will disregard --page but still respects "
                                "filtering.")
-    parser.add_argument("-c", "--count", type = int, default = 100,
-                        help = "Number of items to return per page (defaults to 100).")
+    parser.add_argument("-c", "--count", type = int, choices = range(1, 500), default = 100,
+                        metavar = 'COUNT',
+                        help = "Number of items to return per page between 1 and 500 "
+                               "(defaults to 100).")
     parser.add_argument("-p", "--page", type = int, default = 1,
                         help = "Page number of results to return (defaults to 1).")
     parser.add_argument("-t", "--types", nargs = '*', type = str, metavar = "TYPE",
