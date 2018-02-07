@@ -11,10 +11,10 @@ from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
 from slacker.utility import readline, parse_line, signal_handler, parse_args, workspace_token_prompt
+from slacker.completer import Completer
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.contrib.completers import WordCompleter
 from prompt_toolkit.shortcuts import confirm
 
 slacker_logger = None
@@ -56,17 +56,15 @@ def check():
       sys.exit(-1)
   slacker_logger.info('All good: {} valid commands'.format(reg.count()))
 
-def build_prompt_completer(register):
+def build_prompt_completer(registrar):
   """Build REPL completion dictionary"""
   cmds = []
   cmds_meta = {}
-  for cmd in register.commands():
+  for cmd in registrar.commands():
     cmd_name = cmd.name()
     cmds.append(cmd_name)
     cmds_meta[cmd_name] = cmd.description()
-
-  return WordCompleter(cmds, meta_dict=cmds_meta, ignore_case=True)
-
+  return Completer(cmds, cmds_meta, registrar)
 
 def init():
   if config.active_workspace():
