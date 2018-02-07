@@ -27,8 +27,10 @@ def readline(completer, history):
 
 def parse_line(line):
   """ Parse line of text """
-  if " " in line:
-    return line.split(maxsplit = 1)
+  try:
+    if " " in line:
+      return line.split(maxsplit = 1)
+  except: pass
   return (line, None)
 
 def create_logger(name):
