@@ -36,13 +36,13 @@ def process(line, reg):
     # If --help is used with a command then we don't exit the program!
     return
   except Exception as ex:
-    slacker_logger.error('Error: {}'.format(ex))
+    slacker_logger.error('Error: {} {}'.format(type(ex), ex))
     return
 
   try:
     instance.action(args)
-  except Exception as e:
-    slacker_logger.warning(str(e))
+  except Exception as ex:
+    slacker_logger.warning('{} {}'.format(type(ex), ex))
 
 def check():
   slacker_logger.debug('Checking all commands for validty..')
