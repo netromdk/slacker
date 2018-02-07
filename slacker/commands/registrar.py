@@ -42,3 +42,10 @@ class Registrar:
   def names(self):
     """Returns all registered command names."""
     return self.__commands.keys()
+
+  def get_completer(self, command):
+    command = command.strip().lower()
+    instance = self.find(command)
+    if not instance:
+      return None
+    return instance.make_completer()
