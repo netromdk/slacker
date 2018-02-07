@@ -5,6 +5,7 @@ from prompt_toolkit.contrib.completers import WordCompleter
 class Completer(WordCompleter):
   def __init__(self, words, meta_dict, registrar):
     self.__registrar = registrar
+    self.__completers = {}
     super(Completer, self).__init__(words, meta_dict = meta_dict, ignore_case = True)
 
   def get_completions(self, document, complete_event):
@@ -14,12 +15,17 @@ class Completer(WordCompleter):
     if ' ' in text:
       try:
         (cmd, args) = parse_line(text)
+      except: return []
+
+      completer = None
+      if cmd in self.__completers:
+        completer = self.__completers[cmd]
+      else:
         completer = self.__registrar.get_completer(cmd)
-        if not completer:
-          return []
-        return completer.get_completions(document, complete_event)
-      except: pass
-      return []
+      if not completer:
+        return []
+      self.__completers[cmd] = completer
+      return completer.get_completions(document, complete_event)
 
     # Fallback to the normal completer.
     return super(Completer, self).get_completions(document, complete_event)
