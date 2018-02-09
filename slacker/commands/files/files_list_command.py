@@ -36,6 +36,8 @@ class FilesListCommand(Command):
     parser.add_argument('--total-size', action = 'store_true',
                         help = 'Compute total file size and don\'t print file names. Implies '
                                '--all and disregards filtering.')
+    parser.add_argument('-u', '--user', type = str,
+                        help = "Filter for files uploaded by a specific user.")
     return parser
 
   def action(self, args = None):
@@ -65,7 +67,8 @@ class FilesListCommand(Command):
                              "count": args.count,
                              "page": page,
                              "ts_from": newer_than,
-                             "ts_to": older_than})
+                             "ts_to": older_than,
+                             'user': args.user})
 
       files = data["files"]
       if len(files) == 0:
