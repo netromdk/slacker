@@ -12,5 +12,9 @@ class HelpCommand(Command):
 
   def action(self, args = None):
     self.logger.info("Displaying available commands:")
+    instances = []
     for cmd in Command.find_all():
-      self.__show(cmd())
+      instances.append(cmd())
+    instances.sort(key = lambda i: i.name())
+    for instance in instances:
+      self.__show(instance)
