@@ -1,7 +1,9 @@
 import requests
 import json
+import os
 
 from slacker.environment.config import Config
+from slacker.logger import Logger
 
 class SlackAPIException(Exception):
   pass
@@ -10,10 +12,13 @@ class SlackAPI:
   """Encapsulates sending requests to the Slack API and getting back JSON responses."""
 
   def __init__(self, token = None):
+    config = Config.get()
+    self.__logger = Logger(__name__, config.log_level()).get()
+
     if token:
       self.__token = token
     else:
-      self.__token = Config.get().active_workspace_token()
+      self.__token = config.active_workspace_token()
 
     # Methods that doesn't require the token to be sent.
     self.__token_unneeded = ['api.test']
@@ -43,3 +48,32 @@ class SlackAPI:
       raise SlackAPIException('Unsuccessful API request: {}\nError: {}'.format(response.url, error))
 
     return data
+
+  def download_file(self, file_id, folder):
+    """Download file via ID to a folder. File IDs can be retrieved using the `files.list'
+    command. Private files use Bearer authorization via the token."""
+    if not os.path.exists(folder):
+      os.makedirs(folder, exists_ok = True)
+
+    headers = {}
+    file_info = self.post('files.info', {'file': file_id})['file']
+    if file_info['is_public']:
+      url = file_info['url_download']
+    else:
+      url = file_info['url_private_download']
+      headers['Authorization'] = 'Bearer {}'.format(self.__token)
+
+    self.__logger.debug('Downloading {} to {}'.format(url, folder))
+
+    res = requests.get(url, stream = True, headers = headers)
+    if res.status_code != 200:
+      self.__logger.warning('Unable to download {}'.format(url))
+      return
+
+    file_name = os.path.join(folder, file_info['name'])
+    self.__logger.debug('Writing to disk {} -> {}'.format(url, file_name))
+    with open(file_name, 'wb') as f:
+      for chunk in res.iter_content(1024):
+        f.write(chunk)
+
+    return file_name

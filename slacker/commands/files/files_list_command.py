@@ -1,5 +1,3 @@
-import os
-import requests
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.utility import ts_add_days
@@ -46,24 +44,6 @@ class FilesListCommand(Command):
                                '--total-size.')
     return parser
 
-
-  def __download(self, url, file_name, folder):
-    self.logger.debug('Downloading {} to {}'.format(url, folder))
-
-    token = Config.get().active_workspace_token()
-    res = requests.get(url, stream = True, headers = {'Authorization': 'Bearer {}'.format(token)})
-    if res.status_code != 200:
-      self.logger.warning('Unable to download {}: {}'.format(emoji_name, url))
-      return
-
-    local_save_path = os.path.join(folder, file_name)
-    self.logger.debug('Writing to disk {} -> {}'.format(url, local_save_path))
-    with open(local_save_path, 'wb') as f:
-      for chunk in res.iter_content(1024):
-        f.write(chunk)
-
-    return local_save_path
-
   def action(self, args = None):
     if args.total_size and args.download:
       self.logger.error('Cannot specify --total-size and --download at the same time!')
@@ -89,8 +69,6 @@ class FilesListCommand(Command):
 
     # Create folder to download to if it doesn't exist already.
     if args.download:
-      if not os.path.exists(args.download):
-        os.makedirs(args.download, exists_ok = True)
       self.logger.info('Files will be downloaded to {}'.format(args.download))
 
     slack_api = SlackAPI()
@@ -114,13 +92,7 @@ class FilesListCommand(Command):
         totalFiles += 1
         totalSize += f['size']
         if args.download:
-          # TODO: Encapsulate download-via-file-ID-to-folder in one function call!
-          file_info = slack_api.post('files.info', {'file': f['id']})['file']
-          if file_info['is_public']:
-            url = file_info['url_download']
-          else:
-            url = file_info['url_private_download']
-          self.__download(url, file_info['name'], args.download)
+          slack_api.download_file(f['id'], args.download)
 
       # Stop when reaching the last page if args.all is set.
       if args.all:
