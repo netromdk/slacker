@@ -1,7 +1,10 @@
+import os
+import requests
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.utility import ts_add_days
 from slacker.slack_api import SlackAPI
+from slacker.environment.config import Config
 from humanfriendly import format_size
 
 class FilesListCommand(Command):
@@ -35,12 +38,37 @@ class FilesListCommand(Command):
                         help = "Show only files that are older than input amount of days.")
     parser.add_argument('--total-size', action = 'store_true',
                         help = 'Compute total file size and don\'t print file names. Implies '
-                               '--all and disregards filtering.')
+                               '--all and disregards filtering. Disables --download.')
     parser.add_argument('-u', '--user', type = str,
                         help = "Filter for files uploaded by a specific user.")
+    parser.add_argument('-d', '--download', type = str, metavar = 'DIR',
+                        help = 'Download filtered files to a specific folder. Disables '
+                               '--total-size.')
     return parser
 
+
+  def __download(self, url, file_name, folder):
+    self.logger.debug('Downloading {} to {}'.format(url, folder))
+
+    token = Config.get().active_workspace_token()
+    res = requests.get(url, stream = True, headers = {'Authorization': 'Bearer {}'.format(token)})
+    if res.status_code != 200:
+      self.logger.warning('Unable to download {}: {}'.format(emoji_name, url))
+      return
+
+    local_save_path = os.path.join(folder, file_name)
+    self.logger.debug('Writing to disk {} -> {}'.format(url, local_save_path))
+    with open(local_save_path, 'wb') as f:
+      for chunk in res.iter_content(1024):
+        f.write(chunk)
+
+    return local_save_path
+
   def action(self, args = None):
+    if args.total_size and args.download:
+      self.logger.error('Cannot specify --total-size and --download at the same time!')
+      return
+
     if not args.total_size:
       self.logger.info("Listing files..")
     else:
@@ -59,6 +87,12 @@ class FilesListCommand(Command):
     if args.days_old and not args.total_size:
       newer_than = ts_add_days(-1 * args.days_old)
 
+    # Create folder to download to if it doesn't exist already.
+    if args.download:
+      if not os.path.exists(args.download):
+        os.makedirs(args.download, exists_ok = True)
+      self.logger.info('Files will be downloaded to {}'.format(args.download))
+
     slack_api = SlackAPI()
     while True:
       # Get next page of files.
@@ -75,9 +109,18 @@ class FilesListCommand(Command):
         break
       for f in files:
         if not args.total_size:
-          self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
+          self.logger.info('  {:<50} {:>10}'.format(f['name'],
+                                                    format_size(f['size'], binary = True)))
         totalFiles += 1
-        totalSize += f["size"]
+        totalSize += f['size']
+        if args.download:
+          # TODO: Encapsulate download-via-file-ID-to-folder in one function call!
+          file_info = slack_api.post('files.info', {'file': f['id']})['file']
+          if file_info['is_public']:
+            url = file_info['url_download']
+          else:
+            url = file_info['url_private_download']
+          self.__download(url, file_info['name'], args.download)
 
       # Stop when reaching the last page if args.all is set.
       if args.all:
