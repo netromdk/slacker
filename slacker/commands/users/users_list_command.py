@@ -34,7 +34,13 @@ class UsersListCommand(Command):
       results += len(users)
 
       for user in users:
+        self.logger.info('  {} ({})'.format(user['name'], user['id']))
+
         info = []
+        if 'real_name' in user and user['real_name']:
+          info.append(user['real_name'])
+        if 'tz' in user and user['tz']:
+          info.append(user['tz'])
         if 'is_admin' in user and user['is_admin']:
           info.append('admin')
         if 'is_owner' in user and user['is_owner']:
@@ -50,10 +56,8 @@ class UsersListCommand(Command):
         if 'locale' in user:
           info.append(user['locale'])
         info = ', '.join(info)
-        tz = user['tz']
-        self.logger.info('  {} ({})'.format(user['name'], user['id']))
-        self.logger.info('    {}{}{}'.format(user['real_name'], ', ' + tz if tz else '',
-                                               ', ' + info if info else ''))
+        if info:
+          self.logger.info('    {}'.format(info))
 
       if args.no_follow: break
       meta = data['response_metadata']
