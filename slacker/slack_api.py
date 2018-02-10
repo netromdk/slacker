@@ -67,8 +67,8 @@ class SlackAPI:
 
     res = requests.get(url, stream = True, headers = headers)
     if res.status_code != 200:
-      self.__logger.warning('Unable to download {}'.format(url))
-      return
+      raise SlackAPIException('Unsuccessful API request: {} (code {})\nReason: {}'
+                              .format(res.url, res.status_code, res.reason))
 
     file_name = os.path.join(folder, file_info['name'])
     self.__logger.debug('Writing to disk {} -> {}'.format(url, file_name))
