@@ -6,3 +6,9 @@ setup: clean
 clean:
 	rm -fr .venv
 	find . -iname __pycache__ | xargs rm -fr
+
+install: uninstall
+	ln -s "`pwd`/slacker.sh" /usr/local/bin/slacker
+
+uninstall:
+	rm -f /usr/local/bin/slacker
