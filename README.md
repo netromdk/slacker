@@ -23,16 +23,21 @@ Slacker is ready for use afterwards with "myworkspace" as the active workspace. 
 # Commands
 ```
 Displaying available commands:
+  api.test            Checks that the Slack API is online.
+  auth.test           Checks authentication and describes user identity.
+  channels.list       Displays info about channels on Slack.
+  chat.memessage      Post a me message to a channel on Slack.
+  chat.postephemeral  Post ephemeral message to a channel on Slack that is only visible to assigned user.
+  chat.postmessage    Post message to a channel on Slack.
+  config              Shows current config state.
+  emoji.list          Lists custom emojis in workspace
+  exit                Exits Slacker.
+  files.delete        Delete files uploaded to and stored on Slack.
+  files.list          Displays info about files on Slack.
   help                Displays general help.
   log                 Displays current log level.
-  exit                Exits Slacker.
-  config              Shows current config state.
+  users.list          Displays info about users on Slack.
   workspace           Displays predefined workspaces and which one is active.
-  api.test            Checks that the Slack API is online.
-  files.list          Displays info about files on Slack.
-  files.delete        Delete files uploaded to and stored on Slack.
-  emoji.list          Lists custom emojis in workspace
-  auth.test           Checks authentication and describes user identity.
 ```
 
 # CLI Usage
