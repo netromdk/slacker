@@ -23,9 +23,19 @@ class SlackAPI:
     # Methods that doesn't require the token to be sent.
     self.__token_unneeded = ['api.test']
 
+    # Method that are destructive, modifies state, or sends messages will not be run in read-only
+    # mode.
+    self.__modifying = ['files.delete', 'chat.memessage', 'chat.postmessage', 'chat.postephemeral']
+
+  def __check_read_only_abort(self, method):
+    if method.lower() in self.__modifying and Config.get().read_only():
+      raise SlackAPIException('Not executing "{}" due to read-only mode!'.format(method))
+
   def post(self, method, args = {}):
     """Send HTTP POST using method, as the part after https://slack.com/api/, and arguments as a
     dictionary of arguments."""
+    self.__check_read_only_abort(method)
+
     url = 'https://slack.com/api/{}'.format(method)
     if not method in self.__token_unneeded:
       args['token'] = self.__token
