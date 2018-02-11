@@ -20,6 +20,8 @@ myworkspace>
 
 Slacker is ready for use afterwards with "myworkspace" as the active workspace. _Note that it is recommended to employ a user token, not a bot token!_
 
+Tokens can be created [here](https://api.slack.com/custom-integrations/legacy-tokens). _Never share these tokens!_
+
 # Commands
 ```
 Displaying available commands:
