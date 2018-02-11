@@ -20,8 +20,8 @@ from prompt_toolkit.shortcuts import confirm
 slacker_logger = None
 config = None
 
-def process(line, reg):
-  (cmd, args) = parse_line(line)
+def process(line_or_args, reg):
+  (cmd, args) = parse_line(line_or_args)
 
   instance = reg.find(cmd.lower())
   if not instance:
@@ -137,7 +137,8 @@ def start_slacker():
     sys.exit(-1)
 
   if cmd_args:
-    process(" ".join(cmd_args), reg)
+    # The arguments are already parsed into a list so pass it on!
+    process(cmd_args, reg)
     return
 
   completer = build_prompt_completer(reg)

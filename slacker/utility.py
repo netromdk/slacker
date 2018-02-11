@@ -28,12 +28,14 @@ def readline(completer, history):
 
 def parse_line(line_or_args):
   """Parse line or list of text into (cmd, rest of args)."""
+  if type(line_or_args) == type([]):
+    return (line_or_args[0], line_or_args[1:])
   try:
     if " " in line_or_args:
       (cmd, args) = line_or_args.split(maxsplit = 1)
       return (cmd, shlex.split(args))
   except: pass
-  return (line, None)
+  return (line_or_args, None)
 
 def create_logger(name):
   """Convenience function for creating a logger that respects quiet mode if set."""
