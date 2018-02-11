@@ -21,6 +21,8 @@ def readline(completer, history):
   try:
     config = Config.get()
     txt = "{}{}".format(config.active_workspace(), config.repl_prefix())
+    if config.read_only():
+      txt = '(read-only) {}'.format(txt)
     return prompt(txt, completer=completer, history=history)
 
   # Handle EOF/^D nicely.
