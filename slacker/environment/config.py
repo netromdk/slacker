@@ -86,6 +86,12 @@ class Config:
   def quiet_mode(self):
     return self.__quiet_mode
 
+  def read_only(self):
+    return self.__read_only
+
+  def set_read_only(self, enable):
+    self.__read_only = enable
+
   def file_path(self):
     return os.path.expanduser('~/.slacker')
 
@@ -94,13 +100,15 @@ class Config:
     return {'repl_prefix': self.repl_prefix(),
             'workspaces': self.workspaces(),
             'active_workspace': self.active_workspace(),
-            'log_level': self.log_level()}
+            'log_level': self.log_level(),
+            'read_only': self.read_only()}
 
   def save(self):
     data = {'repl_prefix': self.repl_prefix(),
             'workspaces': self.__workspaces,
             'active_workspace': self.active_workspace(),
-            'log_level': self.log_level()}
+            'log_level': self.log_level(),
+            'read_only': self.read_only()}
     with open(self.file_path(), 'w') as fp:
       json.dump(data, fp, indent = 2)
       self.__logger.debug('Saved config to: {}'.format(self.file_path()))
@@ -116,6 +124,8 @@ class Config:
         self.__active_workspace = data['active_workspace']
       if 'log_level' in data:
         self.set_log_level(data['log_level'])
+      if 'read_only' in data:
+        self.set_read_only(data['read_only'])
       self.__logger.debug('Loaded config from: {}'.format(self.file_path()))
 
   def reset(self):
@@ -124,3 +134,4 @@ class Config:
     self.__workspaces = {} # Workspace name -> API token
     self.__active_workspace = None
     self.__log_level = logging.INFO
+    self.__read_only = False
