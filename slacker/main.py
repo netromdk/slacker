@@ -28,10 +28,10 @@ def process(line_or_args, reg):
     slacker_logger.info("Unknown command: {}".format(cmd))
     return
 
-  # Try parsing even with no arguments so default values are returned in the arguments namespace, if
-  # any.
+  # Try parsing even with no arguments, with [], so default values are returned in the arguments
+  # namespace, if any. This is important!
   try:
-    args = instance.parse_args(args)
+    args = instance.parse_args(args if args else [])
   except DidNotExitException:
     # If --help is used with a command then we don't exit the program!
     return
