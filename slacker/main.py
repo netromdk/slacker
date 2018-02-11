@@ -31,7 +31,7 @@ def process(line, reg):
   # Try parsing even with no arguments so default values are returned in the arguments namespace, if
   # any.
   try:
-    args = instance.parse_args([] if not args else args.split())
+    args = instance.parse_args(args)
   except DidNotExitException:
     # If --help is used with a command then we don't exit the program!
     return

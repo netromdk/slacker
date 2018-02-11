@@ -1,5 +1,6 @@
 import sys
 import calendar
+import shlex
 
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
@@ -25,11 +26,12 @@ def readline(completer, history):
   # Handle EOF/^D nicely.
   except: return None
 
-def parse_line(line):
-  """ Parse line of text """
+def parse_line(line_or_args):
+  """Parse line or list of text into (cmd, rest of args)."""
   try:
-    if " " in line:
-      return line.split(maxsplit = 1)
+    if " " in line_or_args:
+      (cmd, args) = line_or_args.split(maxsplit = 1)
+      return (cmd, shlex.split(args))
   except: pass
   return (line, None)
 
