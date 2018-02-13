@@ -9,6 +9,12 @@ class UsersListCommand(Command):
   def description(self):
     return 'Displays info about users on Slack.'
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return False
+
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument('-l', '--limit', type = int, default = 50,
@@ -23,7 +29,7 @@ class UsersListCommand(Command):
     self.logger.info('Listing users..')
     results = 0
     cursor = ''
-    slack_api = SlackAPI()
+    slack_api = SlackAPI(command = self)
     while True:
       data = slack_api.post('users.list',
                             {'limit': args.limit,

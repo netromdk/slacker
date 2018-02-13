@@ -9,6 +9,12 @@ class ChatPostMessageCommand(Command):
   def description(self):
     return "Post message to a channel on Slack."
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return True
+
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument('-c', '--channel', type = str, help = "Channel ID to post to.")
@@ -29,9 +35,9 @@ class ChatPostMessageCommand(Command):
     text = args.text
     markdown = not args.no_markdown
     self.logger.debug('Sending message to {}: {}'.format(channel, text))
-    SlackAPI().post('chat.postMessage',
-                    {'channel': channel,
-                     'text': text,
-                     'as_user': args.as_user,
-                     'username': args.user,
-                     'mrkdwn': markdown})
+    SlackAPI(command = self).post('chat.postMessage',
+                                  {'channel': channel,
+                                   'text': text,
+                                   'as_user': args.as_user,
+                                   'username': args.user,
+                                   'mrkdwn': markdown})

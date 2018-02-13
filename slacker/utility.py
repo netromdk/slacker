@@ -85,7 +85,7 @@ def parse_args():
 
 def verify_token(token):
   try:
-    return SlackAPI(token).post('auth.test')
+    return SlackAPI(token = token, requires_token = True, is_destructive = False).post('auth.test')
   except Exception as ex:
     create_logger(__name__).warning(ex)
   return None

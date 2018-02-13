@@ -10,6 +10,12 @@ class AuthTestCommand(Command):
   def description(self):
     return "Checks authentication and describes user identity."
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return False
+
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument("-ws", "--workspace", choices = Config.get().workspaces(),
@@ -28,6 +34,9 @@ class AuthTestCommand(Command):
     self.logger.debug("Checking auth for '{}'...".format(ws))
 
     data = verify_token(token)
+    if not data:
+      return False
+
     self.logger.info("Auth successful.")
     self.logger.debug("URL: {}".format(data['url']))
     self.logger.debug("Workspace: {}".format(data['team']))

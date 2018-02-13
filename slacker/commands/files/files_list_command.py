@@ -12,6 +12,12 @@ class FilesListCommand(Command):
   def description(self):
     return "Displays info about files on Slack."
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return False
+
   def make_parser(self):
     file_types = ['all', 'spaces', 'snippets', 'images', 'gdocs', 'zips', 'pdfs']
     parser = ArgumentParser(prog = self.name(), description = self.description())
@@ -71,7 +77,7 @@ class FilesListCommand(Command):
     if args.download:
       self.logger.info('Files will be downloaded to {}'.format(args.download))
 
-    slack_api = SlackAPI()
+    slack_api = SlackAPI(command = self)
     while True:
       # Get next page of files.
       data = slack_api.post('files.list',

@@ -33,6 +33,16 @@ class Command(ABC):
     """Returns the help text of the command."""
     return self.description()
 
+  def requires_token(self):
+    """Whether or not the method requires the active workspace's token to function. It defaults to
+    False to not send the token if not needed."""
+    return False
+
+  def is_destructive(self):
+    """Whether or not the method is destructive, modifies state, or sends messages. It defaults to
+    True to require attention if the command is viable in read-only mode."""
+    return True
+
   def __validate(self):
     """Validates that the command is valid and conforming with the requirements."""
     derive_cls = type(self).__mro__[0]

@@ -12,6 +12,12 @@ class FilesDeleteCommand(Command):
   def description(self):
     return 'Delete files uploaded to and stored on Slack.'
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return True
+
   def make_parser(self):
     file_types = ['all', 'spaces', 'snippets', 'images', 'gdocs', 'zips', 'pdfs']
     parser = ArgumentParser(prog = self.name(), description = self.description(),
@@ -57,7 +63,7 @@ class FilesDeleteCommand(Command):
     # Files to delete.
     gathered_files = []
 
-    slack_api = SlackAPI()
+    slack_api = SlackAPI(command = self)
 
     self.logger.info('Gathering files to delete..')
     while True:

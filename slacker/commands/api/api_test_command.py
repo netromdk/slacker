@@ -9,10 +9,13 @@ class ApiTestCommand(Command):
   def description(self):
     return "Checks that the Slack API is online."
 
+  def is_destructive(self):
+    return False
+
   def action(self, args = None):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex
-    data = SlackAPI().post('api.test', {'foo': nonce})
+    data = SlackAPI(command = self).post('api.test', {'foo': nonce})
 
     foo = data['args']['foo']
     if foo != nonce:

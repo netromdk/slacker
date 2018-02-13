@@ -13,6 +13,12 @@ class EmojiListCommand(Command):
   def description(self):
     return 'Lists custom emojis in workspace'
 
+  def requires_token(self):
+    return True
+
+  def is_destructive(self):
+    return False
+
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
     parser.add_argument('-p', '--path', type = str,
@@ -80,7 +86,7 @@ class EmojiListCommand(Command):
     self.save_data_file = 'emojis.json'
     self.logger.info('Contacting Slack API for emojis')
 
-    slack_api = SlackAPI()
+    slack_api = SlackAPI(command = self)
     emojis = slack_api.post('emoji.list')['emoji']
 
     if not args.quiet:

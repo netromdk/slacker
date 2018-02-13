@@ -11,7 +11,7 @@ class SlackAPIException(Exception):
 class SlackAPI:
   """Encapsulates sending requests to the Slack API and getting back JSON responses."""
 
-  def __init__(self, token = None):
+  def __init__(self, token = None, command = None, requires_token = False, is_destructive = True):
     config = Config.get()
     self.__logger = Logger(__name__, config.log_level()).get()
 
@@ -20,15 +20,11 @@ class SlackAPI:
     else:
       self.__token = config.active_workspace_token()
 
-    # Methods that doesn't require the token to be sent.
-    self.__token_unneeded = ['api.test']
-
-    # Method that are destructive, modifies state, or sends messages will not be run in read-only
-    # mode.
-    self.__modifying = ['files.delete', 'chat.memessage', 'chat.postmessage', 'chat.postephemeral']
+    self.__requires_token = requires_token if not command else command.requires_token()
+    self.__is_destructive = is_destructive if not command else command.is_destructive()
 
   def __check_read_only_abort(self, method):
-    if method.lower() in self.__modifying and Config.get().read_only():
+    if self.__is_destructive and Config.get().read_only():
       raise SlackAPIException('Not executing "{}" due to read-only mode!'.format(method))
 
   def post(self, method, args = {}):
@@ -37,7 +33,7 @@ class SlackAPI:
     self.__check_read_only_abort(method)
 
     url = 'https://slack.com/api/{}'.format(method)
-    if not method in self.__token_unneeded:
+    if self.__requires_token:
       args['token'] = self.__token
 
     response = requests.post(url, data = args)
