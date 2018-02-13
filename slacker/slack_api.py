@@ -53,7 +53,7 @@ class SlackAPI:
     """Download file via ID to a folder. File IDs can be retrieved using the `files.list'
     command. Private files use Bearer authorization via the token."""
     if not os.path.exists(folder):
-      os.makedirs(folder, exists_ok = True)
+      os.makedirs(folder, exist_ok = True)
 
     headers = {}
     file_info = self.post('files.info', {'file': file_id})['file']
