@@ -1,6 +1,5 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class ChannelsListCommand(Command):
   def name(self):
@@ -30,13 +29,12 @@ class ChannelsListCommand(Command):
     exclude_members = True # We don't use the members list yet.
     results = 0
     cursor = ''
-    slack_api = SlackAPI(command = self)
     while True:
-      data = slack_api.post('channels.list',
-                            {'limit': args.limit,
-                             'exclude_archived': args.exclude_archived,
-                             'exclude_members': exclude_members,
-                             'cursor': cursor})
+      data = self.slack_api_post('channels.list',
+                                 {'limit': args.limit,
+                                  'exclude_archived': args.exclude_archived,
+                                  'exclude_members': exclude_members,
+                                  'cursor': cursor})
 
       channels = data['channels']
       results += len(channels)

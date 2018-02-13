@@ -1,6 +1,5 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class ChatMeMessageCommand(Command):
   def name(self):
@@ -25,6 +24,6 @@ class ChatMeMessageCommand(Command):
     channel = args.channel
     text = args.text
     self.logger.debug('Sending me message to {}: {}'.format(channel, text))
-    SlackAPI(command = self).post('chat.meMessage',
-                                  {'channel': channel,
-                                   'text': text})
+    self.slack_api_post('chat.meMessage',
+                        {'channel': channel,
+                         'text': text})

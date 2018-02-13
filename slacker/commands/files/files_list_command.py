@@ -1,7 +1,6 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.utility import ts_add_days
-from slacker.slack_api import SlackAPI
 from slacker.environment.config import Config
 from humanfriendly import format_size
 
@@ -77,16 +76,15 @@ class FilesListCommand(Command):
     if args.download:
       self.logger.info('Files will be downloaded to {}'.format(args.download))
 
-    slack_api = SlackAPI(command = self)
     while True:
       # Get next page of files.
-      data = slack_api.post('files.list',
-                            {"types": file_types,
-                             "count": args.count,
-                             "page": page,
-                             "ts_from": newer_than,
-                             "ts_to": older_than,
-                             'user': args.user})
+      data = self.slack_api_post('files.list',
+                                 {"types": file_types,
+                                  "count": args.count,
+                                  "page": page,
+                                  "ts_from": newer_than,
+                                  "ts_to": older_than,
+                                  'user': args.user})
 
       files = data["files"]
       if len(files) == 0:

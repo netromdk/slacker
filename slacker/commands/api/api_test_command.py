@@ -1,6 +1,6 @@
 import uuid
 from slacker.commands.command import Command
-from slacker.slack_api import SlackAPI, SlackAPIException
+from slacker.slack_api import SlackAPIException
 
 class ApiTestCommand(Command):
   def name(self):
@@ -15,7 +15,7 @@ class ApiTestCommand(Command):
   def action(self, args = None):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex
-    data = SlackAPI(command = self).post('api.test', {'foo': nonce})
+    data = self.slack_api_post('api.test', {'foo': nonce})
 
     foo = data['args']['foo']
     if foo != nonce:

@@ -1,7 +1,6 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.utility import ts_add_days
-from slacker.slack_api import SlackAPI
 from humanfriendly import format_size
 from prompt_toolkit.shortcuts import confirm
 
@@ -63,17 +62,15 @@ class FilesDeleteCommand(Command):
     # Files to delete.
     gathered_files = []
 
-    slack_api = SlackAPI(command = self)
-
     self.logger.info('Gathering files to delete..')
     while True:
       # Get next page of files.
-      data = slack_api.post('files.list',
-                            {'count': count,
-                             'page': page,
-                             'types': file_types,
-                             'ts_from': newer_than,
-                             'ts_to': older_than})
+      data = self.slack_api_post('files.list',
+                                   {'count': count,
+                                    'page': page,
+                                    'types': file_types,
+                                    'ts_from': newer_than,
+                                    'ts_to': older_than})
 
       files = data['files']
       if len(files) == 0:
@@ -101,7 +98,7 @@ class FilesDeleteCommand(Command):
 
     for file in gathered_files:
       self.logger.info('Deleting: {} ({})'.format(file['name'], file['id']))
-      slack_api.post('files.delete', {'file': file['id']})
+      self.slack_api_post('files.delete', {'file': file['id']})
 
     self.logger.info('Deleted {} files, {}'.format(len(gathered_files),
                                                    format_size(total_size, binary = True)))

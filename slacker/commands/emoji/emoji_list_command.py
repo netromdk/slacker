@@ -4,7 +4,6 @@ import requests
 
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class EmojiListCommand(Command):
   def name(self):
@@ -86,8 +85,7 @@ class EmojiListCommand(Command):
     self.save_data_file = 'emojis.json'
     self.logger.info('Contacting Slack API for emojis')
 
-    slack_api = SlackAPI(command = self)
-    emojis = slack_api.post('emoji.list')['emoji']
+    emojis = self.slack_api_post('emoji.list')['emoji']
 
     if not args.quiet:
       self.print_emojis(emojis)

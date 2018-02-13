@@ -1,6 +1,5 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class ChatPostMessageCommand(Command):
   def name(self):
@@ -35,9 +34,9 @@ class ChatPostMessageCommand(Command):
     text = args.text
     markdown = not args.no_markdown
     self.logger.debug('Sending message to {}: {}'.format(channel, text))
-    SlackAPI(command = self).post('chat.postMessage',
-                                  {'channel': channel,
-                                   'text': text,
-                                   'as_user': args.as_user,
-                                   'username': args.user,
-                                   'mrkdwn': markdown})
+    self.slack_api_post('chat.postMessage',
+                        {'channel': channel,
+                         'text': text,
+                         'as_user': args.as_user,
+                         'username': args.user,
+                         'mrkdwn': markdown})

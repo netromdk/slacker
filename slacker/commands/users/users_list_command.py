@@ -1,6 +1,5 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class UsersListCommand(Command):
   def name(self):
@@ -29,12 +28,11 @@ class UsersListCommand(Command):
     self.logger.info('Listing users..')
     results = 0
     cursor = ''
-    slack_api = SlackAPI(command = self)
     while True:
-      data = slack_api.post('users.list',
-                            {'limit': args.limit,
-                             'include_locale': args.include_locale,
-                             'cursor': cursor})
+      data = self.slack_api_post('users.list',
+                                 {'limit': args.limit,
+                                  'include_locale': args.include_locale,
+                                  'cursor': cursor})
 
       users = data['members']
       results += len(users)

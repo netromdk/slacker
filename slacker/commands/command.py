@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 from slacker.logger import Logger
 from slacker.environment.config import Config
+from slacker.slack_api import SlackAPI
 
 from prompt_toolkit.contrib.completers import WordCompleter
 
@@ -81,3 +82,6 @@ class Command(ABC):
       if child not in cmds:
         cmds.add(child)
     return cmds
+
+  def slack_api_post(self, method, args = {}):
+    return SlackAPI(command = self).post(method, args)

@@ -1,6 +1,5 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.slack_api import SlackAPI
 
 class ChatPostEphemeralCommand(Command):
   def name(self):
@@ -29,8 +28,8 @@ class ChatPostEphemeralCommand(Command):
     user = args.user
     text = args.text
     self.logger.debug('Sending ephemeral message to {} in {}: {}'.format(user, channel, text))
-    SlackAPI(command = self).post('chat.postEphemeral',
-                                  {'channel': channel,
-                                   'user': user,
-                                   'text': text,
-                                   'as_user': args.as_user})
+    self.slack_api_post('chat.postEphemeral',
+                        {'channel': channel,
+                         'user': user,
+                         'text': text,
+                         'as_user': args.as_user})
