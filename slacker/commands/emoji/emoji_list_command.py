@@ -71,6 +71,11 @@ class EmojiListCommand(Command):
     cwd_save_data = os.path.join(os.getcwd(), self.save_data_file)
     self.logger.info('Emoji save data file saved to {}'.format(cwd_save_data))
 
+  def __check_create_directory(self, directory):
+    if not os.path.exists(directory):
+      self.logger.debug("Creating directory for emoji download: {}".format(directory))
+      os.makedirs(directory, exist_ok = True)
+
   def action(self, args = None):
     self.save_data_file = 'emojis.json'
     self.logger.info('Contacting Slack API for emojis')
@@ -83,4 +88,5 @@ class EmojiListCommand(Command):
 
     if args.path:
       self.local_save_path = args.path
+      self.__check_create_directory(self.local_save_path)
       self.__download_emojis(emojis)
