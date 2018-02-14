@@ -18,7 +18,7 @@ class Command(ABC):
 
   def __init__(self):
     self.__validate()
-    self.logger = Logger(self.__class__.__name__, Config.get().log_level()).get()
+    self.logger = Logger(self.__class__.__name__).get()
 
   @abstractmethod
   def name(self):

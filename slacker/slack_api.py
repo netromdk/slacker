@@ -13,7 +13,7 @@ class SlackAPI:
 
   def __init__(self, token = None, command = None, requires_token = False, is_destructive = True):
     config = Config.get()
-    self.__logger = Logger(__name__, config.log_level()).get()
+    self.__logger = Logger(__name__).get()
 
     if token:
       self.__token = token

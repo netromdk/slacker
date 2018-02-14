@@ -6,7 +6,7 @@ class Registrar:
 
   def __init__(self):
     self.__commands = {} # command name -> command instance
-    self.logger = Logger(self.__class__.__name__, Config.get().log_level()).get()
+    self.logger = Logger(self.__class__.__name__).get()
 
   def register(self, command):
     """Registers a command by name."""

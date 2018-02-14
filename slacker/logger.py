@@ -1,16 +1,24 @@
 import logging
 
+from slacker.session import Session
+
 class Logger():
   """ Global logger class for handling module level logging to different streams
   and log formatters. Modules that should have logging should call Logger.get()
   """
 
-  def __init__(self, module_name, log_level=logging.INFO):
+  def __init__(self, module_name, log_level = logging.INFO):
     self.logger = logging.getLogger(module_name)
 
     # Check if the logger is already loaded for that module
     if self.logger.level != 0:
       return
+
+    # Use log level of session if defined. This is to circumvent the need of importing Config
+    # (circular!).
+    session = Session.get()
+    ll = session.log_level()
+    log_level = log_level if ll is None else ll
 
     self.log_level = log_level
     self.logger.setLevel(log_level)
@@ -20,10 +28,11 @@ class Logger():
     self.__configure_formatter(self.file_handler)
     self.logger.addHandler(self.file_handler)
 
-    # Config STDOUT log handler
-    self.stream_handler = self.__stream_handler()
-    self.__configure_formatter(self.stream_handler, '%(message)s')
-    self.logger.addHandler(self.stream_handler)
+    # Config STDOUT log handler if not in quiet mode.
+    if not session.quiet_mode():
+      self.stream_handler = self.__stream_handler()
+      self.__configure_formatter(self.stream_handler, '%(message)s')
+      self.logger.addHandler(self.stream_handler)
 
   def set_log_level(self, log_level):
     self.log_level = log_level

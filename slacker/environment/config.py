@@ -3,18 +3,15 @@ import json
 import logging
 
 from slacker.logger import Logger
+from slacker.session import Session
 
 class Config:
   __instance = None
 
-  def __init__(self, quiet_mode=False):
+  def __init__(self):
     """Get instance of Config via Config.get()."""
     if not Config.__instance:
-      logger_instance = Logger(self.__class__.__name__)
-      self.__logger = logger_instance.get()
-      self.__quiet_mode = quiet_mode
-      if self.__quiet_mode:
-        logger_instance.disable_stream_handler()
+      self.__logger = Logger(self.__class__.__name__).get()
 
       # Set default values.
       self.reset()
@@ -29,9 +26,9 @@ class Config:
       Config.__instance = self
 
   @staticmethod
-  def get(quiet_mode=False):
+  def get():
     if not Config.__instance:
-      Config(quiet_mode)
+      Config()
     return Config.__instance
 
   def repl_prefix(self):
@@ -78,13 +75,11 @@ class Config:
     if not level in Logger.levels():
       raise ValueError("Invalid log level: {}".format(level))
     self.__log_level = level
+    Session.get().set_log_level(level)
     Logger.set_level(level)
 
   def log_level(self):
     return self.__log_level
-
-  def quiet_mode(self):
-    return self.__quiet_mode
 
   def read_only(self):
     return self.__read_only

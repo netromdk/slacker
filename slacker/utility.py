@@ -39,17 +39,9 @@ def parse_line(line_or_args):
   except: pass
   return (line_or_args, None)
 
-def create_logger(name):
-  """Convenience function for creating a logger that respects quiet mode if set."""
-  config = Config.get()
-  logger = Logger(name, config.log_level()).get()
-  if config.quiet_mode():
-    logger.disable_stream_handler()
-  return logger
-
 def signal_handler(signal, frame):
   """Handle signal interrupts."""
-  create_logger(__name__).info("Caught sig.. {}".format(signal))
+  Logger(__name__).get().info("Caught sig.. {}".format(signal))
   sys.exit(0)
 
 def parse_args():
@@ -87,11 +79,11 @@ def verify_token(token):
   try:
     return SlackAPI(token = token, requires_token = True, is_destructive = False).post('auth.test')
   except Exception as ex:
-    create_logger(__name__).warning(ex)
+    Logger(__name__).get().warning(ex)
   return None
 
 def workspace_token_prompt(msg = 'Input workspace token: '):
-  logger = create_logger(__name__)
+  logger = Logger(__name__).get()
   config = Config.get()
   workspace = ''
   token = ''
