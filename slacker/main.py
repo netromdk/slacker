@@ -12,6 +12,7 @@ from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
 from slacker.utility import readline, parse_line, signal_handler, parse_args, workspace_token_prompt
 from slacker.completer import Completer
+from slacker.session import Session
 
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
@@ -88,16 +89,15 @@ def start_slacker():
   signal.signal(signal.SIGINT, signal_handler)
   (args, cmd_args) = parse_args()
 
+  session = Session.get()
+  session.set_quiet_mode(args.quiet)
+
   global config
-  config = Config.get(args.quiet)
+  config = Config.get()
+  session.set_log_level(config.log_level())
 
   global slacker_logger
-  slacker_logger = Logger(__name__, config.log_level()).get()
-
-  # Disable the registered startup logger stream handlers
-  if args.quiet:
-    Logger.disable_stream_handlers()
-
+  slacker_logger = Logger(__name__).get()
   slacker_logger.debug('Starting Slacker...')
 
   if args.check:
@@ -121,11 +121,9 @@ def start_slacker():
     sys.exit(-1)
 
   if args.verbose:
+    session.set_log_level(logging.DEBUG)
     Logger.set_level(logging.DEBUG)
     slacker_logger.debug('Verbose mode setting debug session log level.')
-
-  if args.quiet:
-    Logger.disable_stream_handlers()
 
   try:
     if not args.no_tests:
