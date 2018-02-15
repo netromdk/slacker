@@ -100,6 +100,11 @@ def start_slacker():
   slacker_logger = Logger(__name__).get()
   slacker_logger.debug("Starting Slacker...")
 
+  if args.verbose:
+    session.set_log_level(logging.DEBUG)
+    Logger.set_level(logging.DEBUG)
+    slacker_logger.debug("Verbose mode setting debug session log level.")
+
   if args.check:
     check()
     return
@@ -119,11 +124,6 @@ def start_slacker():
   if reg.count() == 0:
     slacker_logger.error("No commands found!")
     sys.exit(-1)
-
-  if args.verbose:
-    session.set_log_level(logging.DEBUG)
-    Logger.set_level(logging.DEBUG)
-    slacker_logger.debug("Verbose mode setting debug session log level.")
 
   try:
     if not args.no_tests:
