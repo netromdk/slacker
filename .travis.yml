@@ -1,0 +1,12 @@
+sudo: false
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "nightly"
+install:
+  - pip install -U pip virtualenv
+script:
+  - make setup
+  - source .venv/bin/activate
+  - ./slacker.py --verbose --check

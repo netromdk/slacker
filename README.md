@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/netromdk/slacker.svg?branch=master)](https://travis-ci.org/netromdk/slacker)
+
 # slacker
 Slacker is a tool designed to make it easier to do admin tasks and general utility for several workspaces (teams). It supports a REPL for inputting and evaluating commands, along with a CLI for running a single command.
 

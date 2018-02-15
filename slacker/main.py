@@ -50,7 +50,9 @@ def check():
   reg = Registrar()
   for cmd in Command.find_all():
     try:
-      reg.register(cmd())
+      instance = cmd()
+      reg.register(instance)
+      slacker_logger.debug("Registered '{}'".format(instance.name()))
     except Exception as ex:
       slacker_logger.error("Command failed check: {}".format(cmd))
       slacker_logger.error("Error: {}".format(ex))
