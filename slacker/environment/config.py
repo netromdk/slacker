@@ -20,7 +20,7 @@ class Config:
       try:
         self.load()
       except Exception as ex:
-        self.__logger.debug('Config does not exist: {}\n{}'.format(self.file_path(), ex))
+        self.__logger.debug("Config does not exist: {}\n{}".format(self.file_path(), ex))
 
       # Assign singleton instance.
       Config.__instance = self
@@ -88,44 +88,44 @@ class Config:
     self.__read_only = enable
 
   def file_path(self):
-    return os.path.expanduser('~/.slacker')
+    return os.path.expanduser("~/.slacker")
 
   def safe_dict(self):
     """Returns a safe dictionary of current values excluding any tokens."""
-    return {'repl_prefix': self.repl_prefix(),
-            'workspaces': self.workspaces(),
-            'active_workspace': self.active_workspace(),
-            'log_level': self.log_level(),
-            'read_only': self.read_only()}
+    return {"repl_prefix": self.repl_prefix(),
+            "workspaces": self.workspaces(),
+            "active_workspace": self.active_workspace(),
+            "log_level": self.log_level(),
+            "read_only": self.read_only()}
 
   def save(self):
-    data = {'repl_prefix': self.repl_prefix(),
-            'workspaces': self.__workspaces,
-            'active_workspace': self.active_workspace(),
-            'log_level': self.log_level(),
-            'read_only': self.read_only()}
-    with open(self.file_path(), 'w') as fp:
+    data = {"repl_prefix": self.repl_prefix(),
+            "workspaces": self.__workspaces,
+            "active_workspace": self.active_workspace(),
+            "log_level": self.log_level(),
+            "read_only": self.read_only()}
+    with open(self.file_path(), "w") as fp:
       json.dump(data, fp, indent = 2)
-      self.__logger.debug('Saved config to: {}'.format(self.file_path()))
+      self.__logger.debug("Saved config to: {}".format(self.file_path()))
 
   def load(self):
-    with open(self.file_path(), 'r') as fp:
+    with open(self.file_path(), "r") as fp:
       data = json.load(fp)
-      if 'repl_prefix' in data:
-        self.set_repl_prefix(data['repl_prefix'])
-      if 'workspaces' in data:
-        self.__workspaces = data['workspaces']
-      if 'active_workspace' in data:
-        self.__active_workspace = data['active_workspace']
-      if 'log_level' in data:
-        self.set_log_level(data['log_level'])
-      if 'read_only' in data:
-        self.set_read_only(data['read_only'])
-      self.__logger.debug('Loaded config from: {}'.format(self.file_path()))
+      if "repl_prefix" in data:
+        self.set_repl_prefix(data["repl_prefix"])
+      if "workspaces" in data:
+        self.__workspaces = data["workspaces"]
+      if "active_workspace" in data:
+        self.__active_workspace = data["active_workspace"]
+      if "log_level" in data:
+        self.set_log_level(data["log_level"])
+      if "read_only" in data:
+        self.set_read_only(data["read_only"])
+      self.__logger.debug("Loaded config from: {}".format(self.file_path()))
 
   def reset(self):
     """Resets all values to default."""
-    self.set_repl_prefix('> ')
+    self.set_repl_prefix("> ")
     self.__workspaces = {} # Workspace name -> API token
     self.__active_workspace = None
     self.__log_level = logging.INFO

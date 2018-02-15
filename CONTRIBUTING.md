@@ -4,4 +4,6 @@ Contributions are very welcome for bug fixes particularly but also features that
 Before opening a pull request, please first run `./slacker.py --check` to make sure the environment and commands are valid, especially the one you're making.
 
 ## Code Style Guidelines
-We follow [PEP8](https://www.python.org/dev/peps/pep-0008/) as the general style guide, but using _2 spaces as a tab_!
+We follow [PEP8](https://www.python.org/dev/peps/pep-0008/) as the general style guide with a few extra items:
+* 2 spaces instead of a tab character
+* Double quotes around strings and single quotes for substrings: `"Hello 'world'!"`

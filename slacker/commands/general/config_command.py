@@ -16,11 +16,11 @@ class ConfigCommand(Command):
 
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("--set-read-only", dest = "read_only", action = 'store_true',
+    parser.add_argument("--set-read-only", dest = "read_only", action = "store_true",
                         help = "Set read-only mode.")
-    parser.add_argument("--unset-read-only", dest = "read_only", action = 'store_false',
+    parser.add_argument("--unset-read-only", dest = "read_only", action = "store_false",
                         help = "Unset read-only mode.")
-    parser.add_argument("--reset", action = 'store_true',
+    parser.add_argument("--reset", action = "store_true",
                         help = "Reset all config values to default and exit slacker (be careful!).")
     parser.set_defaults(read_only = None)
     return parser
@@ -34,10 +34,10 @@ class ConfigCommand(Command):
 
     elif args.reset:
       if config.read_only():
-        self.logger.warning('Cannot reset config in read-only mode!')
+        self.logger.warning("Cannot reset config in read-only mode!")
         return
-      if confirm('Resetting will close slacker and requires --init again.\n'
-                 'Are you sure you want to reset the config? '):
+      if confirm("Resetting will close slacker and requires --init again.\n"
+                 "Are you sure you want to reset the config? "):
         config.reset()
         config.save()
         sys.exit(0)

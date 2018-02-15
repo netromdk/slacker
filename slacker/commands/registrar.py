@@ -29,7 +29,7 @@ class Registrar:
     if cmd:
       cmd.action(args)
     else:
-      self.logger.debug('Could not find and action command: {}'.format(name))
+      self.logger.debug("Could not find and action command: {}".format(name))
 
   def count(self):
     """Returns the amount of commands registered."""

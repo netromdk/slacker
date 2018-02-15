@@ -18,8 +18,8 @@ class ArgumentParser(argparse.ArgumentParser):
   def add_argument(self, *args, **kwargs):
     for arg in args:
       self.__words.append(arg)
-      if 'help' in kwargs:
-        self.__meta[arg] = kwargs['help']
+      if "help" in kwargs:
+        self.__meta[arg] = kwargs["help"]
     return super(ArgumentParser, self).add_argument(*args, **kwargs)
 
   def words(self):

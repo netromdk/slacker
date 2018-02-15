@@ -37,25 +37,25 @@ def process(line_or_args, reg):
     # If --help is used with a command then we don't exit the program!
     return
   except Exception as ex:
-    slacker_logger.error('Error: {} {}'.format(type(ex), ex))
+    slacker_logger.error("Error: {} {}".format(type(ex), ex))
     return
 
   try:
     instance.action(args)
   except Exception as ex:
-    slacker_logger.warning('{} {}'.format(type(ex), ex))
+    slacker_logger.warning("{} {}".format(type(ex), ex))
 
 def check():
-  slacker_logger.debug('Checking all commands for validty..')
+  slacker_logger.debug("Checking all commands for validty..")
   reg = Registrar()
   for cmd in Command.find_all():
     try:
       reg.register(cmd())
     except Exception as ex:
-      slacker_logger.error('Command failed check: {}'.format(cmd))
-      slacker_logger.error('Error: {}'.format(ex))
+      slacker_logger.error("Command failed check: {}".format(cmd))
+      slacker_logger.error("Error: {}".format(ex))
       sys.exit(-1)
-  slacker_logger.info('All good: {} valid commands'.format(reg.count()))
+  slacker_logger.info("All good: {} valid commands".format(reg.count()))
 
 def build_prompt_completer(registrar):
   """Build REPL completion dictionary"""
@@ -98,7 +98,7 @@ def start_slacker():
 
   global slacker_logger
   slacker_logger = Logger(__name__).get()
-  slacker_logger.debug('Starting Slacker...')
+  slacker_logger.debug("Starting Slacker...")
 
   if args.check:
     check()
@@ -123,15 +123,15 @@ def start_slacker():
   if args.verbose:
     session.set_log_level(logging.DEBUG)
     Logger.set_level(logging.DEBUG)
-    slacker_logger.debug('Verbose mode setting debug session log level.')
+    slacker_logger.debug("Verbose mode setting debug session log level.")
 
   try:
     if not args.no_tests:
-      reg.action('api.test')
-      reg.action('auth.test')
+      reg.action("api.test")
+      reg.action("auth.test")
   except Exception as ex:
     slacker_logger.error(str(ex))
-    slacker_logger.warning('Make sure you have internet access and verify your tokens!')
+    slacker_logger.warning("Make sure you have internet access and verify your tokens!")
     sys.exit(-1)
 
   if cmd_args:

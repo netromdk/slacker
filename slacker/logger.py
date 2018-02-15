@@ -24,14 +24,14 @@ class Logger():
     self.logger.setLevel(log_level)
 
     # Config log handler
-    self.file_handler = self.__file_handler('slacker.log')
+    self.file_handler = self.__file_handler("slacker.log")
     self.__configure_formatter(self.file_handler)
     self.logger.addHandler(self.file_handler)
 
     # Config STDOUT log handler if not in quiet mode.
     if not session.quiet_mode():
       self.stream_handler = self.__stream_handler()
-      self.__configure_formatter(self.stream_handler, '%(message)s')
+      self.__configure_formatter(self.stream_handler, "%(message)s")
       self.logger.addHandler(self.stream_handler)
 
   def set_log_level(self, log_level):
@@ -52,7 +52,7 @@ class Logger():
     return sh
 
   def __configure_formatter(self, logger,
-                            fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'):
+                            fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
     formatter = logging.Formatter(fmt)
     logger.setFormatter(formatter)
 
@@ -77,7 +77,7 @@ class Logger():
   @staticmethod
   def set_level(level):
     for logger in logging.Logger.manager.loggerDict.values():
-      if not hasattr(logger, 'handlers'):
+      if not hasattr(logger, "handlers"):
         continue
 
       logger.setLevel(level)
@@ -87,7 +87,7 @@ class Logger():
   @staticmethod
   def disable_stream_handlers():
     for logger in logging.Logger.manager.loggerDict.values():
-      if not hasattr(logger, 'handlers'):
+      if not hasattr(logger, "handlers"):
         continue
 
       for handler in logger.handlers:

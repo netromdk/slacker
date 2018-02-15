@@ -22,7 +22,7 @@ def readline(completer, history):
     config = Config.get()
     txt = "{}{}".format(config.active_workspace(), config.repl_prefix())
     if config.read_only():
-      txt = '(read-only) {}'.format(txt)
+      txt = "(read-only) {}".format(txt)
     return prompt(txt, completer=completer, history=history)
 
   # Handle EOF/^D nicely.
@@ -77,23 +77,23 @@ def parse_args():
 
 def verify_token(token):
   try:
-    return SlackAPI(token = token, requires_token = True, is_destructive = False).post('auth.test')
+    return SlackAPI(token = token, requires_token = True, is_destructive = False).post("auth.test")
   except Exception as ex:
     Logger(__name__).get().warning(ex)
   return None
 
-def workspace_token_prompt(msg = 'Input workspace token: '):
+def workspace_token_prompt(msg = "Input workspace token: "):
   logger = Logger(__name__).get()
   config = Config.get()
-  workspace = ''
-  token = ''
+  workspace = ""
+  token = ""
   while True:
     token = prompt(msg, is_password = True).strip()
     if len(token) == 0: continue
     data = verify_token(token)
     if not data: continue
-    workspace = data['team']
+    workspace = data["team"]
     if workspace in config.workspaces():
-      logger.warning('Workspace of token already exists: {}'.format(workspace))
+      logger.warning("Workspace of token already exists: {}".format(workspace))
       continue
     return (workspace, token)

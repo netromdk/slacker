@@ -16,20 +16,20 @@ class ChatPostEphemeralCommand(Command):
 
   def make_parser(self):
     parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument('-c', '--channel', type = str, help = "Channel ID to post to.")
-    parser.add_argument('-u', '--user', type = str, help = "User ID to post ephemeral message to.")
-    parser.add_argument('--as-user', action = 'store_true',
+    parser.add_argument("-c", "--channel", type = str, help = "Channel ID to post to.")
+    parser.add_argument("-u", "--user", type = str, help = "User ID to post ephemeral message to.")
+    parser.add_argument("--as-user", action = "store_true",
                         help = "Post as authed user instead of as bot.")
-    parser.add_argument('text', type = str, help = "Text to post.")
+    parser.add_argument("text", type = str, help = "Text to post.")
     return parser
 
   def action(self, args = None):
     channel = args.channel
     user = args.user
     text = args.text
-    self.logger.debug('Sending ephemeral message to {} in {}: {}'.format(user, channel, text))
-    self.slack_api_post('chat.postEphemeral',
-                        {'channel': channel,
-                         'user': user,
-                         'text': text,
-                         'as_user': args.as_user})
+    self.logger.debug("Sending ephemeral message to {} in {}: {}".format(user, channel, text))
+    self.slack_api_post("chat.postEphemeral",
+                        {"channel": channel,
+                         "user": user,
+                         "text": text,
+                         "as_user": args.as_user})

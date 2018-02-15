@@ -14,7 +14,7 @@ class WorkspaceCommand(Command):
     parser = ArgumentParser(prog = self.name(), description = "Displays predefined workspaces.")
     parser.add_argument("-s", "--set", metavar = "WORKSPACE",
                         help = "Set another workspace active.")
-    parser.add_argument("-c", "--create", action = 'store_true', help = "Create a workspace.")
+    parser.add_argument("-c", "--create", action = "store_true", help = "Create a workspace.")
     parser.add_argument("-r", "--remove", metavar = "WORKSPACE", help = "Remove a workspace.")
     return parser
 

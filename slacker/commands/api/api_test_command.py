@@ -15,9 +15,9 @@ class ApiTestCommand(Command):
   def action(self, args = None):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex
-    data = self.slack_api_post('api.test', {'foo': nonce})
+    data = self.slack_api_post("api.test", {"foo": nonce})
 
-    foo = data['args']['foo']
+    foo = data["args"]["foo"]
     if foo != nonce:
       raise SlackAPIException("Received incorrect nonce: {} vs. {}".format(foo, nonce))
 

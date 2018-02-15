@@ -38,9 +38,9 @@ class AuthTestCommand(Command):
       return False
 
     self.logger.info("Auth successful.")
-    self.logger.debug("URL: {}".format(data['url']))
-    self.logger.debug("Workspace: {}".format(data['team']))
-    self.logger.debug("Workspace ID: {}".format(data['team_id']))
-    self.logger.debug("User: {}".format(data['user']))
-    self.logger.debug("User ID: {}".format(data['user_id']))
+    self.logger.debug("URL: {}".format(data["url"]))
+    self.logger.debug("Workspace: {}".format(data["team"]))
+    self.logger.debug("Workspace ID: {}".format(data["team_id"]))
+    self.logger.debug("User: {}".format(data["user"]))
+    self.logger.debug("User ID: {}".format(data["user_id"]))
     return True

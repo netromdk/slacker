@@ -21,7 +21,7 @@ class LogCommand(Command):
   def action(self, args = None):
     if args.level:
       level = Logger.level_from_name(args.level)
-      self.logger.debug('Set log level to: {}'.format(args.level))
+      self.logger.debug("Set log level to: {}".format(args.level))
 
       config = Config.get()
       config.set_log_level(level)
