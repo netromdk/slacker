@@ -6,7 +6,16 @@ from slacker.environment.config import Config
 from slacker.logger import Logger
 
 class SlackAPIException(Exception):
-  pass
+  def __init__(self, message, error = None):
+    """Slack API exception with a general message and optional error code."""
+    super(SlackAPIException, self).__init__(message)
+    self.__error = error
+
+  def error(self):
+    """Returns error code if defined, otherwise the general message."""
+    if self.__error:
+      return self.__error
+    return str(self)
 
 class SlackAPI:
   """Encapsulates sending requests to the Slack API and getting back JSON responses."""
@@ -51,7 +60,8 @@ class SlackAPI:
       error = ""
       if "error" in data:
         error = data["error"]
-      raise SlackAPIException("Unsuccessful API request: {}\nError: {}".format(response.url, error))
+      raise SlackAPIException("Unsuccessful API request: {}\nError: {}".format(response.url, error),
+                              error)
 
     return data
 
