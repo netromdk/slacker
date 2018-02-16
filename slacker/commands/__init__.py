@@ -15,6 +15,7 @@ from .api import api_test_command
 from .auth import auth_test_command
 from .emoji import emoji_list_command
 from .channels import channels_list_command
+from .channels import channels_invite_command
 from .users import users_list_command
 from .chat import chat_postmessage_command
 from .chat import chat_postephemeral_command
