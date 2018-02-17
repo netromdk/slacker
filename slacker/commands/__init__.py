@@ -20,3 +20,26 @@ from .users import users_list_command
 from .chat import chat_postmessage_command
 from .chat import chat_postephemeral_command
 from .chat import chat_memessage_command
+
+__all__ = ["command",
+           "registrar",
+
+           # General commands:
+           "help_command",
+           "workspace_command",
+           "exit_command",
+           "log_command",
+           "config_command",
+
+           # Slack API commands:
+           "files_list_command",
+           "files_delete_command",
+           "api_test_command",
+           "auth_test_command",
+           "emoji_list_command",
+           "channels_list_command",
+           "channels_invite_command",
+           "users_list_command",
+           "chat_postmessage_command",
+           "chat_postephemeral_command",
+           "chat_memessage_command"]
