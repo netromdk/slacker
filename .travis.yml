@@ -1,12 +1,15 @@
 sudo: false
 language: python
 python:
-  - "3.5"
-  - "3.6"
-  - "nightly"
+- '3.5'
+- '3.6'
+- nightly
 install:
-  - pip install -U pip virtualenv
+- pip install -U pip virtualenv
 script:
-  - make setup
-  - source .venv/bin/activate
-  - ./slacker.py --verbose --check
+- make setup
+- source .venv/bin/activate
+- "./slacker.py --verbose --check"
+notifications:
+  slack:
+    secure: E09DzOFWqONu0ZaohGOXJ1952I1/RUOUIPg0vcygZoBJMsJJ/LbRkt5C0fTDeXDdPHPdKC3WgeSTlzpXRMjr77FSXOxBjx3V6BgNQi0/gn0o4XMNcCs5zRLjDPUwP3m8WFfL/uOc1zeR7FCwKj7Hpx5caMU4kYM8EIH/A7Cu8kWdYBtSYPn66QJNighLYWE4aBIfm4HSjeEUI57rjbd0urELTQTwwwKqSLjvwp8FNiMOff+SBNjJF+S/k0eZiO3v/lWtsra3VUfZoL/Cnui8n3UdGVziWRvJ5YQASudi57S8KpQVCF9QKMgM1V9AujOoE1uQXn2TtPD6slxuuDzCcQWkkShtJlH/u0k4geneZZFBwT9OougRiY8bq1eL4Rx2txC23wT03JoLRXJY3E5Vpq5Yf4vNt/+rf+EZltuc5Fd8Brte6bVf1FAPCLVKkYfmPPIVhSFoiTyW6YO5fWbPg+hPrVarqvUBnBC3HkCwwsqJUOSAtBV5tqJCU2tYIfueBrJkQ0XGLH8XyZRzIX+MDC8fMgsQqaClTUbBk5ZNqZLe8PSHY5Uma8KBJ4eHRLLJZN4Latp4tIk8x00tCd1rguNBShOjc67RlA74NV/W2NvhASdDdMSW7fsR2FH5OsgQYG2I/sWNFtIIcAtOMEMU3u6OGLNPc1YC9fHzm1BcDwE=
