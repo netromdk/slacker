@@ -96,7 +96,7 @@ class FilesListCommand(Command):
         totalFiles += 1
         totalSize += f["size"]
         if args.download:
-          slack_api.download_file(f["id"], args.download)
+          self.slack_api_download_file(f["id"], args.download)
 
       # Stop when reaching the last page if args.all is set.
       if args.all:

@@ -85,3 +85,6 @@ class Command(ABC):
 
   def slack_api_post(self, method, args = {}):
     return SlackAPI(command = self).post(method, args)
+
+  def slack_api_download_file(self, file_id, folder):
+    return SlackAPI(command = self).download_file(file_id, folder)
