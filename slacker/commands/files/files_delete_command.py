@@ -1,8 +1,7 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
-from slacker.utility import ts_add_days
+from slacker.utility import ts_add_days, ask_abort
 from humanfriendly import format_size
-from prompt_toolkit.shortcuts import confirm
 
 class FilesDeleteCommand(Command):
   def name(self):
@@ -40,9 +39,7 @@ class FilesDeleteCommand(Command):
   def action(self, args = None):
     # If no actual arguments are given (only defaults) then ask to proceed deleting all files.
     if not args.dry_run and args.days_old is None and args.older_than is None:
-      if not confirm("Are you sure you want to delete all files? "):
-        self.logger.info("Aborting..")
-        return
+      ask_abort("Are you sure you want to delete all files? ", abort_on_yes=False)
 
     total_size = 0
     count = 100

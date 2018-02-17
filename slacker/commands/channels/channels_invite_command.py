@@ -1,8 +1,7 @@
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
 from slacker.slack_api import SlackAPIException
-
-from prompt_toolkit.shortcuts import confirm
+from slacker.utility import ask_abort
 
 class ChannelsInviteCommand(Command):
   def name(self):
@@ -39,9 +38,7 @@ class ChannelsInviteCommand(Command):
       self.__invite(args.user, args.channel)
 
     elif args.all:
-      if not confirm("Are you sure you want to send an invite to all users? "):
-        self.logger.info("Aborting!")
-        return
+      ask_abort("Are you sure you want to send an invite to all users?", abort_on_yes = False)
 
       cursor = ""
       while True:

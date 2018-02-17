@@ -6,6 +6,7 @@ from argparse import ArgumentParser
 from datetime import datetime, timedelta
 
 from prompt_toolkit import prompt
+from prompt_toolkit.shortcuts import confirm
 
 from slacker.environment.constants import VERSION
 from slacker.environment.config import Config
@@ -97,3 +98,11 @@ def workspace_token_prompt(msg = "Input workspace token: "):
       logger.warning("Workspace of token already exists: {}".format(workspace))
       continue
     return (workspace, token)
+
+class AbortConfirmation(Exception):
+    pass
+
+def ask_abort(msg="Do you want to abort?", abort_on_yes=True):
+  if confirm(msg.strip() + " ") == abort_on_yes:
+    Logger(__name__).get().info("Aborting!")
+    raise AbortConfirmation()

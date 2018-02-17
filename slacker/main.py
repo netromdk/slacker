@@ -10,7 +10,8 @@ from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPIException
-from slacker.utility import readline, parse_line, signal_handler, parse_args, workspace_token_prompt
+from slacker.utility import readline, parse_line, signal_handler, parse_args, \
+                            workspace_token_prompt, AbortConfirmation
 from slacker.completer import Completer
 from slacker.session import Session
 
@@ -42,6 +43,8 @@ def process(line_or_args, reg):
 
   try:
     instance.action(args)
+  except AbortConfirmation:
+    pass
   except Exception as ex:
     slacker_logger.warning("{} {}".format(type(ex), ex))
 
