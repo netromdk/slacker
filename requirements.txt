@@ -1,8 +1,9 @@
 certifi==2018.1.18
 chardet==3.0.4
-idna==2.6
-requests==2.18.4
-urllib3==1.22
-argparse==1.4.0
 humanfriendly==4.8
+idna==2.6
 prompt-toolkit==1.0.15
+requests==2.18.4
+six==1.11.0
+urllib3==1.22
+wcwidth==0.1.7
