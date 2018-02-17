@@ -41,9 +41,6 @@ class Logger():
     self.log_level = log_level
     self.logger.setLevel(log_level)
 
-  def disable_stream_handler(self):
-    self.logger.removeHandler(self.stream_handler)
-
   def __file_handler(self, log_file):
     fh = RotatingFileHandler(log_file, maxBytes=MAX_LOG_FILE_BYTES,
                              backupCount=NUM_LOG_FILE_BACKUPS)
@@ -87,13 +84,3 @@ class Logger():
       logger.setLevel(level)
       for handler in logger.handlers:
         handler.setLevel(level)
-
-  @staticmethod
-  def disable_stream_handlers():
-    for logger in logging.Logger.manager.loggerDict.values():
-      if not hasattr(logger, "handlers"):
-        continue
-
-      for handler in logger.handlers:
-        if type(handler) == logging.StreamHandler:
-          logger.removeHandler(handler)

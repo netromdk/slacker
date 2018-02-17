@@ -29,10 +29,6 @@ class Command(ABC):
     """Returns the description of the command."""
     pass
 
-  def help(self):
-    """Returns the help text of the command."""
-    return self.description()
-
   def requires_token(self):
     """Whether or not the method requires the active workspace's token to function. It defaults to
     False to not send the token if not needed."""
