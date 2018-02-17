@@ -1,12 +1,11 @@
 import requests
-import json
 import os
 
 from slacker.environment.config import Config
 from slacker.logger import Logger
 
 class SlackAPIException(Exception):
-  def __init__(self, message, error = None):
+  def __init__(self, message, error=None):
     """Slack API exception with a general message and optional error code."""
     super(SlackAPIException, self).__init__(message)
     self.__error = error
@@ -20,7 +19,7 @@ class SlackAPIException(Exception):
 class SlackAPI:
   """Encapsulates sending requests to the Slack API and getting back JSON responses."""
 
-  def __init__(self, token = None, command = None, requires_token = False, is_destructive = True):
+  def __init__(self, token=None, command=None, requires_token=False, is_destructive=True):
     config = Config.get()
     self.__logger = Logger(__name__).get()
 
@@ -36,7 +35,7 @@ class SlackAPI:
     if self.__is_destructive and Config.get().read_only():
       raise SlackAPIException("Not executing '{}' due to read-only mode!".format(method))
 
-  def post(self, method, args = {}):
+  def post(self, method, args={}):
     """Send HTTP POST using method, as the part after https://slack.com/api/, and arguments as a
     dictionary of arguments."""
     self.__check_read_only_abort(method)
@@ -45,14 +44,14 @@ class SlackAPI:
     if self.__requires_token:
       args["token"] = self.__token
 
-    response = requests.post(url, data = args)
+    response = requests.post(url, data=args)
     if response.status_code != 200:
       raise SlackAPIException("Unsuccessful API request: {} (code {})\nReason: {}\nResponse: {}"
                               .format(response.url, response.status_code, response.reason,
                                       response.text))
 
     data = response.json()
-    if not "ok" in data:
+    if "ok" not in data:
       raise SlackAPIException("Unsuccessful API request: {}\nInvalid response: {}"
                               .format(response.url, data))
 
@@ -69,7 +68,7 @@ class SlackAPI:
     """Download file via ID to a folder. File IDs can be retrieved using the `files.list'
     command. Private files use Bearer authorization via the token."""
     if not os.path.exists(folder):
-      os.makedirs(folder, exist_ok = True)
+      os.makedirs(folder, exist_ok=True)
 
     headers = {}
     file_info = self.post("files.info", {"file": file_id})["file"]
@@ -81,7 +80,7 @@ class SlackAPI:
 
     self.__logger.debug("Downloading {} to {}".format(url, folder))
 
-    res = requests.get(url, stream = True, headers = headers)
+    res = requests.get(url, stream=True, headers=headers)
     if res.status_code != 200:
       raise SlackAPIException("Unsuccessful API request: {} (code {})\nReason: {}"
                               .format(res.url, res.status_code, res.reason))

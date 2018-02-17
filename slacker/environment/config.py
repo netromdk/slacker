@@ -42,7 +42,7 @@ class Config:
     return self.__active_workspace
 
   def set_active_workspace(self, name):
-    if not name in self.__workspaces:
+    if name not in self.__workspaces:
       raise ValueError("Cannot set unknown workspace active: '{}'".format(name))
     self.__active_workspace = name
 
@@ -52,7 +52,7 @@ class Config:
     self.__workspaces[name] = token
 
   def remove_workspace(self, name):
-    if not name in self.__workspaces:
+    if name not in self.__workspaces:
       raise ValueError("Cannot remove unknown workspace: '{}'".format(name))
     if self.active_workspace() == name:
       raise ValueError("Cannot remove active workspace: '{}'".format(name))
@@ -62,7 +62,7 @@ class Config:
     return list(self.__workspaces.keys())
 
   def workspace_token(self, name):
-    if not name in self.__workspaces:
+    if name not in self.__workspaces:
       raise ValueError("Cannot get token for unknown workspace: '{}'".format(name))
     return self.__workspaces[name]
 
@@ -72,7 +72,7 @@ class Config:
     return self.workspace_token(self.active_workspace())
 
   def set_log_level(self, level):
-    if not level in Logger.levels():
+    if level not in Logger.levels():
       raise ValueError("Invalid log level: {}".format(level))
     self.__log_level = level
     Session.get().set_log_level(level)
@@ -105,7 +105,7 @@ class Config:
             "log_level": self.log_level(),
             "read_only": self.read_only()}
     with open(self.file_path(), "w") as fp:
-      json.dump(data, fp, indent = 2)
+      json.dump(data, fp, indent=2)
       self.__logger.debug("Saved config to: {}".format(self.file_path()))
 
   def load(self):
@@ -126,7 +126,7 @@ class Config:
   def reset(self):
     """Resets all values to default."""
     self.set_repl_prefix("> ")
-    self.__workspaces = {} # Workspace name -> API token
+    self.__workspaces = {}  # Workspace name -> API token
     self.__active_workspace = None
     self.__log_level = logging.INFO
     self.__read_only = False

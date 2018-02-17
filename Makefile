@@ -20,6 +20,6 @@ check-cmds:
 	./slacker.py --verbose --check
 
 check-style:
-	flake8 --ignore E111,E114,E261,E302 --max-line-length 100 --count --show-source slacker
+	flake8 --ignore E111,E114,E302 --max-line-length 100 --count --show-source slacker
 
 check: check-cmds check-style

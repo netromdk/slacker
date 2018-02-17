@@ -17,10 +17,10 @@ class HelpCommand(Command):
     choices = []
     for instance in self.__instances:
       choices.append(instance.name())
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("command", type = str, nargs = "?", choices = choices, metavar = "command",
-                        help = "Get help on a specific command (same as 'command --help'). "
-                               "Valid choices: {}".format(choices))
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("command", type=str, nargs="?", choices=choices, metavar="command",
+                        help="Get help on a specific command (same as 'command --help'). "
+                             "Valid choices: {}".format(choices))
     return parser
 
   def __show(self, cmd):
@@ -32,7 +32,7 @@ class HelpCommand(Command):
       if instance.name() == name.strip():
         try:
           args = instance.parse_args(["--help"])
-          if not args is None:
+          if args is not None:
             instance.action(args)
           else:
             self.logger.info(instance.description())
@@ -45,9 +45,9 @@ class HelpCommand(Command):
     if len(self.__instances) == 0:
       for cmd in Command.find_all():
         self.__instances.append(cmd())
-      self.__instances.sort(key = lambda i: i.name())
+      self.__instances.sort(key=lambda i: i.name())
 
-  def action(self, args = None):
+  def action(self, args=None):
     if args.command:
       self.__find_help(args.command)
       return

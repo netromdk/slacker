@@ -18,25 +18,25 @@ class FilesDeleteCommand(Command):
 
   def make_parser(self):
     file_types = ["all", "spaces", "snippets", "images", "gdocs", "zips", "pdfs"]
-    parser = ArgumentParser(prog = self.name(), description = self.description(),
-                            epilog = "NOTE: It is recommended to first use --dry-run to see what "
-                                     "will be deleted!")
-    parser.add_argument("-n", "--dry-run", action = "store_true",
-                        help = "Don't actually delete any files but show which ones would have "
-                               "been deleted.")
-    parser.add_argument("-t", "--types", nargs = "*", type = str, metavar = "TYPE",
-                        choices = file_types, default = "all",
-                        help = "Delete files by types (defaults to 'all'). All possible values "
-                               "are: {}. Specify multiple like '-t images gdocs'."
-                               .format(file_types))
-    parser.add_argument("--days-old", type = int, metavar = "DAYS",
-                        help = "Delete files with an age in days less than or equal to input "
-                               "amount.")
-    parser.add_argument("--older-than", type = int, metavar = "DAYS",
-                        help = "Delete files that are older than input amount of days.")
+    parser = ArgumentParser(prog=self.name(), description=self.description(),
+                            epilog="NOTE: It is recommended to first use --dry-run to see what "
+                                   "will be deleted!")
+    parser.add_argument("-n", "--dry-run", action="store_true",
+                        help="Don't actually delete any files but show which ones would have "
+                              "been deleted.")
+    parser.add_argument("-t", "--types", nargs="*", type=str, metavar="TYPE",
+                        choices=file_types, default="all",
+                        help="Delete files by types (defaults to 'all'). All possible values "
+                             "are: {}. Specify multiple like '-t images gdocs'."
+                             .format(file_types))
+    parser.add_argument("--days-old", type=int, metavar="DAYS",
+                        help="Delete files with an age in days less than or equal to input "
+                             "amount.")
+    parser.add_argument("--older-than", type=int, metavar="DAYS",
+                        help="Delete files that are older than input amount of days.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     # If no actual arguments are given (only defaults) then ask to proceed deleting all files.
     if not args.dry_run and args.days_old is None and args.older_than is None:
       ask_abort("Are you sure you want to delete all files? ", abort_on_yes=False)
@@ -63,11 +63,11 @@ class FilesDeleteCommand(Command):
     while True:
       # Get next page of files.
       data = self.slack_api_post("files.list",
-                                   {"count": count,
-                                    "page": page,
-                                    "types": file_types,
-                                    "ts_from": newer_than,
-                                    "ts_to": older_than})
+                                 {"count": count,
+                                  "page": page,
+                                  "types": file_types,
+                                  "ts_from": newer_than,
+                                  "ts_to": older_than})
 
       files = data["files"]
       if len(files) == 0:
@@ -75,7 +75,7 @@ class FilesDeleteCommand(Command):
       for f in files:
         total_size += f["size"]
         gathered_files.append(f)
-        self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary = True)))
+        self.logger.info("  {:<50} {:>10}".format(f["name"], format_size(f["size"], binary=True)))
 
       paging = data["paging"]
       if paging["pages"] == page:
@@ -87,7 +87,7 @@ class FilesDeleteCommand(Command):
       return
 
     self.logger.info("Gathered {} files, {}".format(len(gathered_files),
-                                                    format_size(total_size, binary = True)))
+                                                    format_size(total_size, binary=True)))
 
     if args.dry_run:
       self.logger.info("Dry run: Not deleting any files!")
@@ -98,4 +98,4 @@ class FilesDeleteCommand(Command):
       self.slack_api_post("files.delete", {"file": file["id"]})
 
     self.logger.info("Deleted {} files, {}".format(len(gathered_files),
-                                                   format_size(total_size, binary = True)))
+                                                   format_size(total_size, binary=True)))

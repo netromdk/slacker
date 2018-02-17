@@ -12,7 +12,7 @@ class ApiTestCommand(Command):
   def is_destructive(self):
     return False
 
-  def action(self, args = None):
+  def action(self, args=None):
     self.logger.debug("Checking Slack...")
     nonce = uuid.uuid4().hex
     data = self.slack_api_post("api.test", {"foo": nonce})

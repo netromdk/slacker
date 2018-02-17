@@ -15,12 +15,12 @@ class ChatMeMessageCommand(Command):
     return True
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-c", "--channel", type = str, help = "Channel ID to post to.")
-    parser.add_argument("text", type = str, help = "Text to post.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-c", "--channel", type=str, help="Channel ID to post to.")
+    parser.add_argument("text", type=str, help="Text to post.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     channel = args.channel
     text = args.text
     self.logger.debug("Sending me message to {}: {}".format(channel, text))

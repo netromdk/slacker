@@ -19,8 +19,8 @@ class EmojiListCommand(Command):
     return False
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-p", "--path", type = str,
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-p", "--path", type=str,
                         help="Local file path where to save emojis to")
     parser.add_argument("-q", "--quiet", action="store_true",
                         help="Don't print response from Slack API")
@@ -61,7 +61,8 @@ class EmojiListCommand(Command):
     emoji_file = "{}.{}".format(emoji_name, image_type)
     local_save_path = os.path.join(self.local_save_path, emoji_file)
 
-    self.logger.debug("Writing to disk {}({}) -> {}".format(url, content_length, self.local_save_path))
+    self.logger.debug("Writing to disk {}({}) -> {}".format(url, content_length,
+                                                            self.local_save_path))
     with open(local_save_path, "wb") as f:
       for chunk in res.iter_content(1024):
         f.write(chunk)
@@ -79,9 +80,9 @@ class EmojiListCommand(Command):
   def __check_create_directory(self, directory):
     if not os.path.exists(directory):
       self.logger.debug("Creating directory for emoji download: {}".format(directory))
-      os.makedirs(directory, exist_ok = True)
+      os.makedirs(directory, exist_ok=True)
 
-  def action(self, args = None):
+  def action(self, args=None):
     self.save_data_file = "emojis.json"
     self.logger.info("Contacting Slack API for emojis")
 

@@ -10,7 +10,7 @@ class Logger():
   and log formatters. Modules that should have logging should call Logger.get()
   """
 
-  def __init__(self, module_name, log_level = logging.INFO):
+  def __init__(self, module_name, log_level=logging.INFO):
     self.logger = logging.getLogger(module_name)
 
     # Check if the logger is already loaded for that module
@@ -45,8 +45,8 @@ class Logger():
     self.logger.removeHandler(self.stream_handler)
 
   def __file_handler(self, log_file):
-    fh = RotatingFileHandler(log_file, maxBytes = MAX_LOG_FILE_BYTES,
-                             backupCount = NUM_LOG_FILE_BACKUPS)
+    fh = RotatingFileHandler(log_file, maxBytes=MAX_LOG_FILE_BYTES,
+                             backupCount=NUM_LOG_FILE_BACKUPS)
     fh.setLevel(self.log_level)
     return fh
 
@@ -56,7 +56,7 @@ class Logger():
     return sh
 
   def __configure_formatter(self, logger,
-                            fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
+                            fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
     formatter = logging.Formatter(fmt)
     logger.setFormatter(formatter)
 

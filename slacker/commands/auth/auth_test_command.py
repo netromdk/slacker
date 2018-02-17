@@ -17,12 +17,12 @@ class AuthTestCommand(Command):
     return False
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-ws", "--workspace", choices = Config.get().workspaces(),
-                        help = "Check auth for specified workspace.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-ws", "--workspace", choices=Config.get().workspaces(),
+                        help="Check auth for specified workspace.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     config = Config.get()
     if args and args.workspace:
       ws = args.workspace

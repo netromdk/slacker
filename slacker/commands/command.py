@@ -3,7 +3,6 @@ import re
 from abc import ABC, abstractmethod
 
 from slacker.logger import Logger
-from slacker.environment.config import Config
 from slacker.slack_api import SlackAPI
 
 from prompt_toolkit.contrib.completers import WordCompleter
@@ -60,7 +59,7 @@ class Command(ABC):
     parser = self.make_parser()
     if not parser:
       return None
-    return WordCompleter(parser.words(), meta_dict = parser.meta(), ignore_case = True)
+    return WordCompleter(parser.words(), meta_dict=parser.meta(), ignore_case=True)
 
   def parse_args(self, args):
     """Parse arguments from a list of strings. The output can be given to action()."""
@@ -70,7 +69,7 @@ class Command(ABC):
     return parser.parse_args(args)
 
   @abstractmethod
-  def action(self, args = None):
+  def action(self, args=None):
     """Executes the action of the command with optional arguments parsed via parse_args()."""
     pass
 
@@ -83,8 +82,8 @@ class Command(ABC):
         cmds.add(child)
     return cmds
 
-  def slack_api_post(self, method, args = {}):
-    return SlackAPI(command = self).post(method, args)
+  def slack_api_post(self, method, args={}):
+    return SlackAPI(command=self).post(method, args)
 
   def slack_api_download_file(self, file_id, folder):
-    return SlackAPI(command = self).download_file(file_id, folder)
+    return SlackAPI(command=self).download_file(file_id, folder)

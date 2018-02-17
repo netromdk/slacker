@@ -12,7 +12,7 @@ class ArgumentParser(argparse.ArgumentParser):
     self.__meta = {}
     super(ArgumentParser, self).__init__(*args, **kwargs)
 
-  def exit(self, status = 0, message = None):
+  def exit(self, status=0, message=None):
     raise DidNotExitException()
 
   def add_argument(self, *args, **kwargs):

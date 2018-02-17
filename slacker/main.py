@@ -9,13 +9,11 @@ from slacker.commands.registrar import Registrar
 from slacker.commands.argument_parser import DidNotExitException
 from slacker.environment.config import Config
 from slacker.logger import Logger
-from slacker.slack_api import SlackAPIException
 from slacker.utility import readline, parse_line, signal_handler, parse_args, \
-                            workspace_token_prompt, AbortConfirmation
+  workspace_token_prompt, AbortConfirmation
 from slacker.completer import Completer
 from slacker.session import Session
 
-from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import confirm
 
@@ -119,7 +117,8 @@ def start_slacker():
 
   if not config.active_workspace():
     slacker_logger.error("No workspace active!")
-    slacker_logger.error("Run slacker with --init to interactively create a workspace and config file.")
+    slacker_logger.error("Run slacker with --init to interactively create a workspace and config "
+                         "file.")
     return
 
   reg = Registrar()
@@ -149,6 +148,8 @@ def start_slacker():
 
   while True:
     line = readline(completer, in_memory_history)
-    if line is None: break
-    elif not line: continue
+    if line is None:
+      break
+    elif not line:
+      continue
     process(line, reg)

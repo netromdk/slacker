@@ -1,11 +1,10 @@
 from slacker.logger import Logger
-from slacker.environment.config import Config
 
 class Registrar:
   """Registrar keeps commands that have been registered with it."""
 
   def __init__(self):
-    self.__commands = {} # command name -> command instance
+    self.__commands = {}  # command name -> command instance
     self.logger = Logger(self.__class__.__name__).get()
 
   def register(self, command):
@@ -23,7 +22,7 @@ class Registrar:
 
     return None
 
-  def action(self, name, args = None):
+  def action(self, name, args=None):
     """Convenience method to action command if name is found."""
     cmd = self.find(name)
     if cmd:

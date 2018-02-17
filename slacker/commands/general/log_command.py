@@ -13,12 +13,12 @@ class LogCommand(Command):
     return "Displays current log level."
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-l", "--level", choices = Logger.level_names(),
-                        help = "Set another log level.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-l", "--level", choices=Logger.level_names(),
+                        help="Set another log level.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     if args.level:
       level = Logger.level_from_name(args.level)
       self.logger.debug("Set log level to: {}".format(args.level))

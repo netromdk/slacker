@@ -15,18 +15,18 @@ class ChannelsListCommand(Command):
     return False
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-l", "--limit", type = int, default = 50,
-                        help = "Maximum number of channels to return per page (defaults to 50).")
-    parser.add_argument("-n", "--no-follow", action = "store_true",
-                        help = "Don't follow cursors.")
-    parser.add_argument("--exclude-archived", action = "store_true",
-                        help = "Exclude archived channels.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-l", "--limit", type=int, default=50,
+                        help="Maximum number of channels to return per page (defaults to 50).")
+    parser.add_argument("-n", "--no-follow", action="store_true",
+                        help="Don't follow cursors.")
+    parser.add_argument("--exclude-archived", action="store_true",
+                        help="Exclude archived channels.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     self.logger.info("Listing channels..")
-    exclude_members = True # We don"t use the members list yet.
+    exclude_members = True  # We don"t use the members list yet.
     results = 0
     cursor = ""
     while True:
@@ -56,7 +56,8 @@ class ChannelsListCommand(Command):
         self.logger.info("    {} members{}".format(channel["num_members"],
                                                    ", " + info if info else ""))
 
-      if args.no_follow: break
+      if args.no_follow:
+        break
       meta = data["response_metadata"]
       cursor = meta["next_cursor"].strip()
       if len(cursor) == 0:

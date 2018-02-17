@@ -15,16 +15,16 @@ class UsersListCommand(Command):
     return False
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-l", "--limit", type = int, default = 50,
-                        help = "Maximum number of users to return per page (defaults to 50).")
-    parser.add_argument("-n", "--no-follow", action = "store_true",
-                        help = "Don't follow cursors.")
-    parser.add_argument("--include-locale", action = "store_true",
-                        help = "Include locale of users.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-l", "--limit", type=int, default=50,
+                        help="Maximum number of users to return per page (defaults to 50).")
+    parser.add_argument("-n", "--no-follow", action="store_true",
+                        help="Don't follow cursors.")
+    parser.add_argument("--include-locale", action="store_true",
+                        help="Include locale of users.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     self.logger.info("Listing users..")
     results = 0
     cursor = ""
@@ -63,7 +63,9 @@ class UsersListCommand(Command):
         if info:
           self.logger.info("    {}".format(info))
 
-      if args.no_follow: break
+      if args.no_follow:
+        break
+
       meta = data["response_metadata"]
       cursor = meta["next_cursor"].strip()
       if len(cursor) == 0:

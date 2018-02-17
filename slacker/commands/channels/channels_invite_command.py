@@ -17,10 +17,10 @@ class ChannelsInviteCommand(Command):
     return True
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = self.description())
-    parser.add_argument("-a", "--all", action = "store_true", help = "Invite all users to channel.")
-    parser.add_argument("-u", "--user", type = str, help = "User ID to send invite to.")
-    parser.add_argument("channel", type = str, help = "Channel ID to invite user to.")
+    parser = ArgumentParser(prog=self.name(), description=self.description())
+    parser.add_argument("-a", "--all", action="store_true", help="Invite all users to channel.")
+    parser.add_argument("-u", "--user", type=str, help="User ID to send invite to.")
+    parser.add_argument("channel", type=str, help="Channel ID to invite user to.")
     return parser
 
   def __invite(self, user, channel):
@@ -29,7 +29,7 @@ class ChannelsInviteCommand(Command):
                         {"user": user,
                          "channel": channel})
 
-  def action(self, args = None):
+  def action(self, args=None):
     if not args.all and not args.user:
       self.logger.error("You must specify either --user or --all!")
       return
@@ -38,7 +38,7 @@ class ChannelsInviteCommand(Command):
       self.__invite(args.user, args.channel)
 
     elif args.all:
-      ask_abort("Are you sure you want to send an invite to all users?", abort_on_yes = False)
+      ask_abort("Are you sure you want to send an invite to all users?", abort_on_yes=False)
 
       cursor = ""
       while True:

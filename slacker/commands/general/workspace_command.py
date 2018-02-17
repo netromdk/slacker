@@ -11,14 +11,14 @@ class WorkspaceCommand(Command):
     return "Displays predefined workspaces and which one is active."
 
   def make_parser(self):
-    parser = ArgumentParser(prog = self.name(), description = "Displays predefined workspaces.")
-    parser.add_argument("-s", "--set", metavar = "WORKSPACE",
-                        help = "Set another workspace active.")
-    parser.add_argument("-c", "--create", action = "store_true", help = "Create a workspace.")
-    parser.add_argument("-r", "--remove", metavar = "WORKSPACE", help = "Remove a workspace.")
+    parser = ArgumentParser(prog=self.name(), description="Displays predefined workspaces.")
+    parser.add_argument("-s", "--set", metavar="WORKSPACE",
+                        help="Set another workspace active.")
+    parser.add_argument("-c", "--create", action="store_true", help="Create a workspace.")
+    parser.add_argument("-r", "--remove", metavar="WORKSPACE", help="Remove a workspace.")
     return parser
 
-  def action(self, args = None):
+  def action(self, args=None):
     config = Config.get()
 
     if args.set:
@@ -26,7 +26,7 @@ class WorkspaceCommand(Command):
       if workspace == config.active_workspace():
         self.logger.warning("Workspace already active!")
         return
-      elif not workspace in config.workspaces():
+      elif workspace not in config.workspaces():
         self.logger.warning("Unknown workspace: '{}'".format(workspace))
         return
 

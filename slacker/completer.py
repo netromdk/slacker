@@ -6,7 +6,7 @@ class Completer(WordCompleter):
   def __init__(self, words, meta_dict, registrar):
     self.__registrar = registrar
     self.__completers = {}
-    super(Completer, self).__init__(words, meta_dict = meta_dict, ignore_case = True)
+    super(Completer, self).__init__(words, meta_dict=meta_dict, ignore_case=True)
 
   def get_completions(self, document, complete_event):
     # If first command has been entered then use completer for command, if any, otherwise don't
