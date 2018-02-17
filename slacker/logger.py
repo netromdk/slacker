@@ -1,6 +1,9 @@
 import logging
+from logging.handlers import RotatingFileHandler
 
 from slacker.session import Session
+from slacker.environment.constants import MAX_LOG_FILE_BYTES, LOG_FILENAME, \
+                                          NUM_LOG_FILE_BACKUPS
 
 class Logger():
   """ Global logger class for handling module level logging to different streams
@@ -24,7 +27,7 @@ class Logger():
     self.logger.setLevel(log_level)
 
     # Config log handler
-    self.file_handler = self.__file_handler("slacker.log")
+    self.file_handler = self.__file_handler(LOG_FILENAME)
     self.__configure_formatter(self.file_handler)
     self.logger.addHandler(self.file_handler)
 
@@ -42,7 +45,8 @@ class Logger():
     self.logger.removeHandler(self.stream_handler)
 
   def __file_handler(self, log_file):
-    fh = logging.FileHandler(log_file)
+    fh = RotatingFileHandler(log_file, maxBytes = MAX_LOG_FILE_BYTES,
+                             backupCount = NUM_LOG_FILE_BACKUPS)
     fh.setLevel(self.log_level)
     return fh
 
