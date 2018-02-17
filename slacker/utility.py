@@ -42,7 +42,7 @@ def parse_line(line_or_args):
     pass
   return (line_or_args.strip(), None)
 
-def signal_handler(signal, frame):
+def signal_handler(signal, _callback, *args):
   """Handle signal interrupts."""
   Logger(__name__).get().info("Caught sig.. {}".format(signal))
   sys.exit(0)
