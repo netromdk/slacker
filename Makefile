@@ -23,4 +23,8 @@ check-style:
 	flake8 --ignore E111,E114,E121,E126,E302 --max-line-length 100 --count --show-source \
 	  slacker slacker.py
 
-check: check-cmds check-style
+static_analysis:
+	vulture --min-confidence 60 --sort-by-size --exclude slacker/commands/__init__.py \
+	  slacker slacker.py .vulture_whitelist.py
+
+check: check-cmds check-style static_analysis
