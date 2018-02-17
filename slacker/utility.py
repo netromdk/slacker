@@ -40,7 +40,7 @@ def parse_line(line_or_args):
       return (cmd, shlex.split(args))
   except ValueError:
     pass
-  return (line_or_args, None)
+  return (line_or_args.strip(), None)
 
 def signal_handler(signal, frame):
   """Handle signal interrupts."""
