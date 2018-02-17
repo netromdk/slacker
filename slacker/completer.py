@@ -13,9 +13,7 @@ class Completer(WordCompleter):
     # try to complete further.
     text = document.text_before_cursor.lstrip()
     if ' ' in text:
-      try:
-        (cmd, args) = parse_line(text)
-      except: return []
+      (cmd, args) = parse_line(text)
 
       completer = None
       if cmd in self.__completers:
