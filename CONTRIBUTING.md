@@ -21,6 +21,7 @@ Commands reside in `slacker.commands` under the their category, like "files/" or
 When adding a new command, follow these steps:
 1. Implement `"slacker/commands/CATEGORY/name_command.py"`
 2. In `"slacker/commands/__init__.py"`, import the new command, like `from .CATEGORY import name_command`, and add its name to `__all__`
+3. Add to vulture whitelist in `".vulture_whitelist.py"`, like `wl.NewCommand`, to not give false positives in static analysis
 
 Notes and requirements:
 * The file name of the command must follow the name of the API method, like `files.list` -> `files_list_command.py`
