@@ -12,3 +12,6 @@ install: uninstall
 
 uninstall:
 	rm -f /usr/local/bin/slacker
+
+update-requirements: setup
+	.venv/bin/pip freeze > requirements.txt
