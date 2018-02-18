@@ -1,4 +1,4 @@
-setup: clean
+setup: clean check-python-version
 	virtualenv -p python3 .venv
 	.venv/bin/pip install -r requirements.txt
 	echo "\nTo use environment: source .venv/bin/activate"
@@ -6,6 +6,10 @@ setup: clean
 clean:
 	rm -fr .venv
 	find . -iname __pycache__ | xargs rm -fr
+
+check-python-version:
+	@python3 -c 'import sys; sys.exit(0) if sys.version_info >= (3, 0) else sys.exit(1)'; \
+	if [ $$? -ne 0 ] ; then echo "Python 3 required"; exit 1 ; fi
 
 install: uninstall
 	ln -s "`pwd`/slacker.sh" /usr/local/bin/slacker
