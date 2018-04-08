@@ -24,11 +24,11 @@ check-cmds:
 	./slacker.py --verbose --check
 
 check-style:
-	flake8 --ignore E111,E114,E121,E126,E302 --max-line-length 100 --count --show-source \
+	.venv/bin/flake8 --ignore E111,E114,E121,E126,E302 --max-line-length 100 --count --show-source \
 	  slacker slacker.py
 
 static-analysis:
-	vulture --min-confidence 60 --sort-by-size --exclude slacker/commands/__init__.py \
+	.venv/bin/vulture --min-confidence 60 --sort-by-size --exclude slacker/commands/__init__.py \
 	  slacker slacker.py .vulture_whitelist.py
 
 check-min-version:
