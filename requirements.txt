@@ -10,5 +10,6 @@ pyflakes==1.6.0
 requests==2.18.4
 six==1.11.0
 urllib3==1.22
+vermin==0.4.2
 vulture==0.26
 wcwidth==0.1.7

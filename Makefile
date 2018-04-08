@@ -31,4 +31,7 @@ static-analysis:
 	vulture --min-confidence 60 --sort-by-size --exclude slacker/commands/__init__.py \
 	  slacker slacker.py .vulture_whitelist.py
 
-check: check-cmds check-style static-analysis
+check-min-version:
+	.venv/bin/vermin -t 3.4 slacker slacker.py
+
+check: check-min-version check-cmds check-style static-analysis
