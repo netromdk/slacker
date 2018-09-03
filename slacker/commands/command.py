@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from slacker.logger import Logger
 from slacker.slack_api import SlackAPI
 
-from prompt_toolkit.contrib.completers import WordCompleter
+from prompt_toolkit.completion import WordCompleter
 
 # The "." can only be in the middle of the command name.
 COMMAND_NAME_REGEX = re.compile("([\w\d][\w\d\.]*)?[\w\d]+")

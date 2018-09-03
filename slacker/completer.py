@@ -1,6 +1,6 @@
 from slacker.utility import parse_line
 
-from prompt_toolkit.contrib.completers import WordCompleter
+from prompt_toolkit.completion import WordCompleter
 
 class Completer(WordCompleter):
   def __init__(self, words, meta_dict, registrar):
