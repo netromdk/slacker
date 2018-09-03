@@ -2,8 +2,38 @@ import os
 import json
 import requests
 
+from slacker.task import Task, execute_tasks
 from slacker.commands.command import Command
 from slacker.commands.argument_parser import ArgumentParser
+
+class EmojiDownloadTask(Task):
+  def __init__(self, emoji_name, url, save_path):
+    self.emoji_name = emoji_name
+    self.__url = url
+    self.save_path = save_path
+    self.logs = []
+
+  def run(self):
+    self.logs.append("Downloading {}".format(self.__url))
+
+    res = requests.get(self.__url, stream=True)
+    if res.status_code != 200:
+      self.logs.append("Unable to download {}: {}".format(self.emoji_name, self.__url))
+      return False
+
+    image_type = res.headers["Content-Type"].split("/")[1]
+    content_length = res.headers["Content-Length"]
+
+    emoji_file = "{}.{}".format(self.emoji_name, image_type)
+    self.save_path = os.path.join(self.save_path, emoji_file)
+
+    self.logs.append("Writing to disk {}({}) -> {}".format(self.__url, content_length,
+                                                           self.save_path))
+    with open(self.save_path, "wb") as f:
+      for chunk in res.iter_content(1024):
+        f.write(chunk)
+
+    return self
 
 class EmojiListCommand(Command):
   def name(self):
@@ -29,13 +59,14 @@ class EmojiListCommand(Command):
   def print_emojis(self, emojis):
     total = 0
     for emoji in emojis:
-      print("{:<25} {:<50}".format(emoji, emojis[emoji]))
+      self.logger.info("{:<25} {:<50}".format(emoji, emojis[emoji]))
       total += 1
 
-    print("{} custom emojis".format(total))
+    self.logger.info("{} custom emojis".format(total))
 
   def __download_emojis(self, emojis):
     save_data = {}
+    download_tasks = []
 
     for emoji in emojis:
       emoji_url = emojis[emoji]
@@ -43,31 +74,20 @@ class EmojiListCommand(Command):
         save_data[emoji] = emoji_url
         continue
 
-      saved_file_path = self.__download_emoji(emoji, emojis[emoji])
-      save_data[emoji] = saved_file_path
+      # queue the downloads
+      task = EmojiDownloadTask(emoji, emoji_url, self.local_save_path)
+      download_tasks.append(task)
+
+    # Start the downloads
+    results = execute_tasks(download_tasks)
+    for r in results:
+      if r:
+        for log in r.logs:
+          self.logger.info(log)
+
+        save_data[r.emoji_name] = r.save_path
 
     self.__write_save_file(save_data)
-
-  def __download_emoji(self, emoji_name, url):
-    self.logger.debug("Downloading {}".format(url))
-
-    res = requests.get(url, stream=True)
-    if res.status_code != 200:
-      self.logger.warning("Unable to download {}: {}".format(emoji_name, url))
-
-    image_type = res.headers["Content-Type"].split("/")[1]
-    content_length = res.headers["Content-Length"]
-
-    emoji_file = "{}.{}".format(emoji_name, image_type)
-    local_save_path = os.path.join(self.local_save_path, emoji_file)
-
-    self.logger.debug("Writing to disk {}({}) -> {}".format(url, content_length,
-                                                            self.local_save_path))
-    with open(local_save_path, "wb") as f:
-      for chunk in res.iter_content(1024):
-        f.write(chunk)
-
-    return local_save_path
 
   def __write_save_file(self, save_data):
     with open(self.save_data_file, "w") as f:
