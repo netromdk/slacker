@@ -103,3 +103,4 @@ ENV/
 
 # Slacker related files
 emojis.json
+.slacker
