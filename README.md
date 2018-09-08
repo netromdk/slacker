@@ -17,7 +17,7 @@ The first invocation of Slacker requires to setup a workspace using the `--init`
 Input workspace token: ****************************************************************************
 Added new workspace 'myworkspace' to config and made it active.
 You can now run slacker normally.
-myworkspace> 
+myworkspace>
 ```
 
 Slacker is ready for use afterwards with "myworkspace" as the active workspace. _Note that it is recommended to employ a user token, not a bot token!_
@@ -71,6 +71,15 @@ Slacker is written in [Python 3](https://www.python.org/) and the required modul
 To setup a virtual development environment that doesn't pollute the general system it is expected that [virtualenv](https://virtualenv.pypa.io/en/stable/) for Python 3+ is installed.
 
 Run `make setup` to install required modules to ".venv" in the root of the repository, and issue `source .venv/bin/activate` to activate the environment. From here, the `python`, `python3`, `pip` etc. will map to ".venv" and the modules installed into it.
+
+# Docker
+A Dockerfile is provided to quickly get up an running with Slacker. To build the Docker image it is recommended to use the `docker` target in the Makefile `make docker`, which creates image `slacker:local`. Start the slacker container by executing `docker_run.sh`. By default the script will drop you into the REPL, but slacker commands can be given directly to the script.
+
+```
+% ./docker_run.sh -- files.list -c 10
+```
+
+> **Note:** slacker writes a configuration file to disk (`~/.slacker`). In order to keep the configuration file between subsequent runs the local volume mount in the container is required.
 
 # Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md).

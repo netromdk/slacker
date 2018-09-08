@@ -31,3 +31,7 @@ check-min-version:
 	.venv/bin/vermin -t 3.4 slacker slacker.py
 
 check: check-min-version check-cmds check-style static-analysis
+
+.PHONY: docker
+docker:
+	docker build -t slacker:local .

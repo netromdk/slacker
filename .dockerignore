@@ -1,0 +1,24 @@
+# Markdown files
+*.md
+
+# Logs
+*.log
+
+# Python cache files
+*/__pycache__*
+
+# Virtual environment
+.venv
+
+# Git
+.git
+
+# GitHub templates
+.github
+
+# Utility scripts
+slacker.sh
+.travis.yml
+.vulture_whitelist.py
+LICENSE
+Makefile
