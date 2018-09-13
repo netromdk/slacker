@@ -3,6 +3,8 @@ Contributions are very welcome for bug fixes particularly but also features that
 
 Before opening a pull request, please first run `make check` to make sure the environment, style, and commands are valid, especially the one you're making.
 
+We also have a Slacker [Slack workspace](https://join.slack.com/t/slackerpy/shared_invite/enQtNDM2MDA3MDI2NTM0LWI0MzgyNDgxZTI3NDZmODQ0NWZmYTY0NmMyMDg3YTBiYzFiNTViNWExNTRiNzQzZWQ0M2ViNDBjZjY4MjI1YTg) if you have any questions.
+
 ## Code Style Guidelines
 We follow [PEP8](https://www.python.org/dev/peps/pep-0008/) as the general style guide with a few extra items:
 * 2 spaces instead of a tab character
