@@ -1,4 +1,6 @@
 import requests
+import hashlib
+import json
 import os
 
 from slacker.environment.config import Config
@@ -23,14 +25,14 @@ class SlackAPI:
     config = Config.get()
     self.__logger = Logger(__name__).get()
     self.__url = "https://slack.com/api/{}"
+    self.__cache = None if not command else command.cache
+    self.__requires_token = requires_token if not command else command.requires_token()
+    self.__is_destructive = is_destructive if not command else command.is_destructive()
 
     if token:
       self.__token = token
     else:
       self.__token = config.active_workspace_token()
-
-    self.__requires_token = requires_token if not command else command.requires_token()
-    self.__is_destructive = is_destructive if not command else command.is_destructive()
 
   def __check_read_only_abort(self, method):
     """Returns exception to avoid sending requests to Slack API.
@@ -66,10 +68,20 @@ class SlackAPI:
     if self.__requires_token:
       args["token"] = self.__token
 
+    # Check for cached request
+    cache_key = self.__generate_cache_key(url, args)
+    cache_value = self.__get_cached_value(cache_key)
+    if cache_value is not None:
+      return cache_value
+
     response = requests.post(url, data=args)
     self.__validate_response(response)
 
-    return response.json()
+    json_response = response.json()
+    if cache_key is not None:
+      self.__update_cache(cache_key, json_response)
+
+    return json_response
 
   def get(self, method, args={}):
     """Send HTTP GET request to Slack API.
@@ -148,3 +160,31 @@ class SlackAPI:
         error = data["error"]
       raise SlackAPIException("Unsuccessful API request: {}\nError: {}"
                               .format(response.url, error), error)
+
+  def __get_cached_value(self, key):
+    """Get value from cache given the hash key"""
+    if self.__cache is None or key is None:
+      return None
+
+    val = self.__cache.get(key)
+    if val is None:
+      self.__logger.debug("Cache miss {}".format(key))
+    else:
+      self.__logger.debug("Cache hit {}".format(key))
+
+    return val
+
+  def __update_cache(self, key, resp):
+    """Update cache value given a key"""
+    self.__logger.debug("Updating cache: {}".format(key))
+    self.__cache[key] = resp
+
+  def __generate_cache_key(self, url, params):
+    """Returns hash of the url and params"""
+    if self.__cache is None:
+      return None
+
+    m = hashlib.sha256()
+    m.update(url.encode("utf-8"))
+    m.update(json.dumps(params).encode("utf-8"))
+    return m.hexdigest()
