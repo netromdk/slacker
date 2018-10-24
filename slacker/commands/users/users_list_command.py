@@ -14,6 +14,9 @@ class UsersListCommand(Command):
   def is_destructive(self):
     return False
 
+  def use_cache(self):
+    return True
+
   def make_parser(self):
     parser = ArgumentParser(prog=self.name(), description=self.description())
     parser.add_argument("-l", "--limit", type=int, default=50,
