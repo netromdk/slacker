@@ -1,4 +1,5 @@
 import re
+from cachetools import TTLCache
 
 from abc import ABC, abstractmethod
 
@@ -18,6 +19,14 @@ class Command(ABC):
   def __init__(self):
     self.__validate()
     self.logger = Logger(self.__class__.__name__).get()
+    self.cache = None
+
+    if not self.is_destructive() and self.use_cache():
+      ttl = self.cache_ttl()
+      max_items = self.max_items_in_cache()
+      self.logger.debug("Created {} command cache (maxitems={}, ttl={})"
+                        .format(self.name(), max_items, ttl))
+      self.cache = TTLCache(max_items, ttl)
 
   @abstractmethod
   def name(self):
@@ -38,6 +47,21 @@ class Command(ABC):
     """Whether or not the method is destructive, modifies state, or sends messages. It defaults to
     True to require attention if the command is viable in read-only mode."""
     return True
+
+  def use_cache(self):
+    """Whether the command API call should be cached and looked up later instead
+    of sending and HTTP request to the Slack API. The cache should only be used
+    on non destructive commands"""
+    return False
+
+  def cache_ttl(self):
+    """Controls the TTL on cache keys for the command"""
+    return 60
+
+  def max_items_in_cache(self):
+    """ In addition to TTL the cache implements LRU (least recently used). This
+    controls the number of items allowed in the cache"""
+    return 5
 
   def __validate(self):
     """Validates that the command is valid and conforming with the requirements."""
