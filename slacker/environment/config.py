@@ -5,6 +5,9 @@ import logging
 from slacker.logger import Logger
 from slacker.session import Session
 
+DEFAULT_REPL_PROMPT = "${ro}${w}> "
+DEFAULT_READ_ONLY_STR = "(read-only) "
+
 class Config:
   __instance = None
 
@@ -31,11 +34,11 @@ class Config:
       Config()
     return Config.__instance
 
-  def repl_prefix(self):
-    return self.__repl_prefix
+  def repl_prompt(self):
+    return self.__repl_prompt
 
-  def set_repl_prefix(self, repl_prefix):
-    self.__repl_prefix = repl_prefix
+  def set_repl_prompt(self, repl_prompt):
+    self.__repl_prompt = repl_prompt
 
   def active_workspace(self):
     """Active workspace name, if defined."""
@@ -87,23 +90,31 @@ class Config:
   def set_read_only(self, enable):
     self.__read_only = enable
 
+  def read_only_str(self):
+    return self.__read_only_str
+
+  def set_read_only_str(self, str):
+    self.__read_only_str = str
+
   def file_path(self):
     return os.path.expanduser("~/.slacker")
 
   def safe_dict(self):
     """Returns a safe dictionary of current values excluding any tokens."""
-    return {"repl_prefix": self.repl_prefix(),
+    return {"repl_prompt": self.repl_prompt(),
             "workspaces": self.workspaces(),
             "active_workspace": self.active_workspace(),
             "log_level": self.log_level(),
-            "read_only": self.read_only()}
+            "read_only": self.read_only(),
+            "read_only_str": self.read_only_str()}
 
   def save(self):
-    data = {"repl_prefix": self.repl_prefix(),
+    data = {"repl_prompt": self.repl_prompt(),
             "workspaces": self.__workspaces,
             "active_workspace": self.active_workspace(),
             "log_level": self.log_level(),
-            "read_only": self.read_only()}
+            "read_only": self.read_only(),
+            "read_only_str": self.read_only_str()}
     with open(self.file_path(), "w") as fp:
       json.dump(data, fp, indent=2)
       self.__logger.debug("Saved config to: {}".format(self.file_path()))
@@ -111,8 +122,8 @@ class Config:
   def load(self):
     with open(self.file_path(), "r") as fp:
       data = json.load(fp)
-      if "repl_prefix" in data:
-        self.set_repl_prefix(data["repl_prefix"])
+      if "repl_prompt" in data:
+        self.set_repl_prompt(data["repl_prompt"])
       if "workspaces" in data:
         self.__workspaces = data["workspaces"]
       if "active_workspace" in data:
@@ -121,12 +132,15 @@ class Config:
         self.set_log_level(data["log_level"])
       if "read_only" in data:
         self.set_read_only(data["read_only"])
+      if "read_only_str" in data:
+        self.set_read_only_str(data["read_only_str"])
       self.__logger.debug("Loaded config from: {}".format(self.file_path()))
 
   def reset(self):
     """Resets all values to default."""
-    self.set_repl_prefix("> ")
+    self.set_repl_prompt(DEFAULT_REPL_PROMPT)
     self.__workspaces = {}  # Workspace name -> API token
     self.__active_workspace = None
     self.__log_level = logging.INFO
     self.__read_only = False
+    self.__read_only_str = DEFAULT_READ_ONLY_STR

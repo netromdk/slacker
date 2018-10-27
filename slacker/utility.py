@@ -4,6 +4,7 @@ import shlex
 
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
+from string import Template
 
 from prompt_toolkit import prompt
 from prompt_toolkit.shortcuts import confirm
@@ -21,9 +22,12 @@ def readline(completer, history):
   """ Set prompt and read input """
   try:
     config = Config.get()
-    txt = "{}{}".format(config.active_workspace(), config.repl_prefix())
+    read_only = ""
     if config.read_only():
-      txt = "(read-only) {}".format(txt)
+      read_only = config.read_only_str()
+    tmpl_fill = dict(w=config.active_workspace(), ro=read_only)
+    s = Template(config.repl_prompt())
+    txt = s.safe_substitute(tmpl_fill)
     return prompt(txt, completer=completer, history=history)
 
   # Handle EOF/^D nicely.
