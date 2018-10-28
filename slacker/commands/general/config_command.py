@@ -12,7 +12,7 @@ class ConfigCommand(Command):
     return "config"
 
   def description(self):
-    return "Shows current config state."
+    return "Shows current config state. https://github.com/netromdk/slacker/wiki/Configuration"
 
   def make_parser(self):
     parser = ArgumentParser(prog=self.name(), description=self.description())
