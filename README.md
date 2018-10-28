@@ -3,6 +3,8 @@
 # slacker
 Slacker is a tool designed to make it easier to do admin tasks and general utility for several workspaces (teams). It supports a REPL for inputting and evaluating commands, along with a CLI for running a single command.
 
+![demo](gfx/demo.gif)
+
 # Table of Contents
 * [First Run](#first-run)
 * [Commands](#commands)
