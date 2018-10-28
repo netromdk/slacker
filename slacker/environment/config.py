@@ -5,7 +5,16 @@ import logging
 from slacker.logger import Logger
 from slacker.session import Session
 
+# Default REPL prompt template string. Override with "repl_prompt" field in
+# .slacker config file.
+#
+# Supported identifers:
+# ${ro} - display DEFAULT_READ_ONLY_STR when Slacker is running in read-only mode
+# ${w} - current workspace Slacker is working against
 DEFAULT_REPL_PROMPT = "${ro}${w}> "
+
+# Default string used when Slacker is running in read-only mode. Override with
+# read_only_str in .slacker config file.
 DEFAULT_READ_ONLY_STR = "(read-only) "
 
 class Config:
